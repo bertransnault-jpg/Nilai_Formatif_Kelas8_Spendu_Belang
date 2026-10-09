@@ -321,16 +321,15 @@
       }
     };
 
-    // Kompresi Foto Super Ringan agar Langsung Masuk Ke Firestore
-    function compressImage(file, maxWidth = 500, quality = 0.5) {
+    // Kompresi Gambar Sangat Cepat & Ringan
+    function compressImageUltraFast(file) {
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = (event) => {
+        reader.onload = (e) => {
           const img = new Image();
-          img.src = event.target.result;
           img.onload = () => {
             const canvas = document.createElement('canvas');
+            const maxWidth = 350; // Ukuran kecil super aman untuk Firestore
             let width = img.width;
             let height = img.height;
 
@@ -343,11 +342,13 @@
             canvas.height = height;
             const ctx = canvas.getContext('2d');
             ctx.drawImage(img, 0, 0, width, height);
-            resolve(canvas.toDataURL('image/jpeg', quality));
+            resolve(canvas.toDataURL('image/jpeg', 0.4)); // Kualitas 40% (sekitar 25KB - 40KB)
           };
-          img.onerror = (err) => reject(err);
+          img.onerror = () => reject("Gagal membaca gambar");
+          img.src = e.target.result;
         };
-        reader.onerror = (err) => reject(err);
+        reader.onerror = () => reject("Gagal membaca file");
+        reader.readAsDataURL(file);
       });
     }
 
@@ -370,9 +371,15 @@
       btn.disabled = true;
       btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Mengunggah...`;
 
+      // Timeout Safety (10 Detik)
+      const timeoutId = setTimeout(() => {
+        btn.disabled = false;
+        btn.innerHTML = `<i class="fa-solid fa-camera"></i> Coba Upload Lagi`;
+        alert("Koneksi lambat/terputus. Silakan coba klik tombol upload sekali lagi.");
+      }, 10000);
+
       try {
-        // Kompres Foto & Simpan Langsung Ke Firestore Database
-        const compressedBase64 = await compressImage(file);
+        const compressedBase64 = await compressImageUltraFast(file);
 
         const docRef = doc(db, "siswa_lkm", nis);
         await setDoc(docRef, {
@@ -384,14 +391,17 @@
           lastUpdated: new Date()
         }, { merge: true });
 
+        clearTimeout(timeoutId);
         showMotivationModal();
 
       } catch (error) {
+        clearTimeout(timeoutId);
         console.error("Upload error:", error);
-        alert("Gagal mengunggah foto. Pastikan koneksi internet stabil.");
+        alert("Gagal mengunggah foto. Pastikan koneksi internet aktif.");
       } finally {
         btn.disabled = false;
         btn.innerHTML = `<i class="fa-solid fa-camera"></i> Ganti Foto TTD`;
+        fileInput.value = '';
       }
     };
 
