@@ -73,7 +73,7 @@
           <div class="bg-slate-800/60 border border-slate-700 p-4 rounded-2xl flex items-center justify-between">
             <div>
               <p class="text-xs text-slate-400 font-medium">LKM Tuntas</p>
-              <h3 id="statTuntas" class="text-2xl font-black text-emerald-400 mt-1">0 / 7</h3>
+              <h3 id="statTuntas" class="text-2xl font-black text-emerald-400 mt-1">0 / 6</h3>
             </div>
             <div class="w-12 h-12 bg-emerald-500/10 border border-emerald-500/20 rounded-xl flex items-center justify-center text-emerald-400 text-xl">
               <i class="fa-solid fa-circle-check"></i>
@@ -130,7 +130,7 @@
     <!-- CARDS LKM -->
     <section class="no-print">
       <h2 class="text-sm font-bold text-slate-300 mb-4 uppercase tracking-wider flex items-center gap-2">
-        <i class="fa-solid fa-layer-group text-indigo-400"></i> Lembar Kerja Murid (LKM 1 - 7)
+        <i class="fa-solid fa-layer-group text-indigo-400"></i> Lembar Kerja Murid (LKM 2 - 7)
       </h2>
       <div id="lkmContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
     </section>
@@ -228,8 +228,8 @@
     const db = getFirestore(app);
     const storage = getStorage(app);
 
+    // Daftar LKM tanpa LKM 1
     const lkmList = [
-      { id: 'lkm1', title: 'LKM 1: Uji Makanan & Nutrisi', desc: 'Identifikasi Karbohidrat, Protein, dan Lemak' },
       { id: 'lkm2', title: 'LKM 2: Gizi Seimbang & Isi Piringku', desc: 'Analisis Label Kemasan & Zat Aditif' },
       { id: 'lkm3', title: 'LKM 3: Organ & Enzim Pencernaan', desc: 'Studi Kasus Gangguan Pencernaan' },
       { id: 'lkm4', title: 'LKM 4: Pernapasan & Bahaya Rokok', desc: 'Kasus Investigasi Helbert' },
@@ -442,7 +442,7 @@
             <td class="p-3 font-bold text-indigo-400">#${idx + 1}</td>
             <td class="p-3 font-semibold text-white">${item.nama}</td>
             <td class="p-3 text-slate-400">${item.kelas}</td>
-            <td class="p-3 text-center font-bold text-emerald-400">${item.tuntas} / 7</td>
+            <td class="p-3 text-center font-bold text-emerald-400">${item.tuntas} / 6</td>
             <td class="p-3 text-center font-bold text-indigo-300">${item.rata}</td>
           `;
           tbody.appendChild(tr);
