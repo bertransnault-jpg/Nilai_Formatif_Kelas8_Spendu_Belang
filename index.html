@@ -3,66 +3,55 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Aplikasi Penilaian Formatif LKM IPA - SMP Negeri 2 Belang</title>
+  <title>Aplikasi LKM IPA - SMP Negeri 2 Belang</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    @media print {
-      .no-print { display: none !important; }
-      .print-only { display: block !important; }
+    @keyframes bounce-short {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
     }
+    .animate-bounce-short { animation: bounce-short 1s ease-in-out infinite; }
+    @media print { .no-print { display: none !important; } .print-only { display: block !important; } }
   </style>
 </head>
-<body class="bg-slate-100 text-slate-800 font-sans min-h-screen">
+<body class="bg-slate-900 text-slate-100 font-sans min-h-screen">
 
-  <!-- HEADER / KOP SEKOLAH -->
-  <header class="bg-gradient-to-r from-blue-900 via-blue-800 to-indigo-900 text-white shadow-lg no-print">
-    <div class="max-w-6xl mx-auto px-4 py-4 flex flex-col md:flex-row items-center justify-between gap-4">
-      <div class="flex items-center gap-4">
-        <!-- Logo SVG SMPN 2 Belang -->
-        <svg class="w-16 h-16 drop-shadow-md flex-shrink-0" viewBox="0 0 100 100">
-          <path d="M 50 5 L 90 20 L 85 70 L 50 95 L 15 70 L 10 20 Z" fill="#1e3a8a" stroke="#dc2626" stroke-width="4"/>
-          <path d="M 50 10 L 85 23 L 80 67 L 50 90 L 20 67 L 15 23 Z" fill="#2563eb"/>
-          <path d="M 50 15 L 55 25 L 66 26 L 58 33 L 60 44 L 50 38 L 40 44 L 42 33 L 34 26 L 45 25 Z" fill="#eab308"/>
-          <path d="M 25 70 Q 50 60 75 70 Q 50 80 25 70" fill="#0284c7"/>
-          <path d="M 40 68 L 50 55 L 52 68 Z M 55 68 L 63 58 L 64 68 Z" fill="#ffffff"/>
-          <rect x="20" y="48" width="60" height="12" rx="3" fill="#eab308"/>
-          <text x="50" y="56" font-size="6" font-weight="bold" fill="#000" text-anchor="middle">SMP NEGERI 2 BELANG</text>
-        </svg>
-        <div>
-          <h1 class="text-xl md:text-2xl font-extrabold tracking-wide">SMP NEGERI 2 BELANG</h1>
-          <p class="text-xs md:text-sm text-blue-200">Aplikasi Penilaian Formatif LKM IPA - Fase D</p>
-          <p class="text-xs text-yellow-300 font-semibold mt-0.5"><i class="fa-solid fa-user-tie"></i> Guru Pengampu: N. Tora, S.Pd.</p>
+  <!-- HEADER MODERN -->
+  <header class="bg-slate-800/80 backdrop-blur-md border-b border-slate-700 sticky top-0 z-30 no-print">
+    <div class="max-w-7xl mx-auto px-4 py-4 flex flex-col md:flex-row items-center justify-between gap-4">
+      <div>
+        <div class="flex items-center gap-2">
+          <span class="bg-indigo-600 text-xs font-black uppercase px-2.5 py-0.5 rounded-full tracking-wider">Fase D</span>
+          <h1 class="text-xl md:text-2xl font-black tracking-tight text-white">SMP NEGERI 2 BELANG</h1>
         </div>
+        <p class="text-xs text-slate-400 mt-1">Aplikasi Assessment Formatif IPA &bull; Guru Pengampu: <span class="text-indigo-400 font-bold">N. Tora, S.Pd.</span></p>
       </div>
-      <div class="flex gap-2">
-        <button onclick="window.print()" class="bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold px-3 py-2 rounded-lg text-xs flex items-center gap-1.5 shadow transition">
-          <i class="fa-solid fa-print"></i> Cetak Laporan
-        </button>
-      </div>
+      <button onclick="window.print()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-4 py-2 rounded-xl text-xs flex items-center gap-2 shadow-lg shadow-indigo-600/30 transition">
+        <i class="fa-solid fa-print"></i> Cetak Laporan
+      </button>
     </div>
   </header>
 
-  <!-- KONTEN UTAMA -->
-  <main class="max-w-6xl mx-auto px-4 py-6">
+  <main class="max-w-7xl mx-auto px-4 py-6 space-y-6">
 
-    <!-- FORM DATA IDENTITAS SISWA -->
-    <section class="bg-white rounded-xl shadow-md p-5 mb-6 border-t-4 border-blue-600 no-print">
-      <h2 class="text-base font-bold text-slate-800 mb-3 flex items-center gap-2">
-        <i class="fa-solid fa-id-card text-blue-600"></i> Data Identitas Murid
+    <!-- FORM IDENTITAS SISWA -->
+    <section class="bg-slate-800/60 border border-slate-700 rounded-2xl p-5 backdrop-blur-sm no-print">
+      <h2 class="text-sm font-bold text-slate-300 mb-3 flex items-center gap-2 uppercase tracking-wider">
+        <i class="fa-solid fa-user-astronaut text-indigo-400"></i> Identitas Murid
       </h2>
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div>
-          <label class="block text-xs font-semibold text-slate-600 mb-1">NIS / NISN</label>
-          <input type="text" id="inputNis" placeholder="Masukkan NIS..." class="w-full text-sm p-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+          <label class="block text-xs font-semibold text-slate-400 mb-1">NIS / NISN</label>
+          <input type="text" id="inputNis" placeholder="Masukkan NIS..." class="w-full text-sm p-3 bg-slate-900 border border-slate-700 rounded-xl text-white focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition">
         </div>
         <div>
-          <label class="block text-xs font-semibold text-slate-600 mb-1">Nama Lengkap Murid</label>
-          <input type="text" id="inputNama" placeholder="Masukkan nama siswa..." class="w-full text-sm p-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+          <label class="block text-xs font-semibold text-slate-400 mb-1">Nama Lengkap Murid</label>
+          <input type="text" id="inputNama" placeholder="Masukkan nama siswa..." class="w-full text-sm p-3 bg-slate-900 border border-slate-700 rounded-xl text-white focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition">
         </div>
         <div>
-          <label class="block text-xs font-semibold text-slate-600 mb-1">Kelas</label>
-          <select id="inputKelas" class="w-full text-sm p-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+          <label class="block text-xs font-semibold text-slate-400 mb-1">Kelas</label>
+          <select id="inputKelas" class="w-full text-sm p-3 bg-slate-900 border border-slate-700 rounded-xl text-white focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition">
             <option value="VIII-A">Kelas VIII-A</option>
             <option value="VIII-B">Kelas VIII-B</option>
             <option value="VIII-C">Kelas VIII-C</option>
@@ -70,90 +59,162 @@
         </div>
       </div>
       <div class="mt-4 flex justify-end">
-        <button onclick="muatDataSiswa()" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-4 py-2 rounded-lg flex items-center gap-2 shadow transition">
-          <i class="fa-solid fa-cloud-arrow-down"></i> Muat Data dari Firebase Cloud
+        <button onclick="muatDataSiswa()" class="bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold px-5 py-2.5 rounded-xl flex items-center gap-2 shadow-lg shadow-indigo-600/20 transition">
+          <i class="fa-solid fa-cloud-arrow-down"></i> Muat Data dari Cloud
         </button>
       </div>
     </section>
 
-    <!-- RINGKASAN PROGRES FORMATIF -->
-    <section class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6 no-print">
-      <div class="bg-white p-4 rounded-xl shadow border-l-4 border-emerald-500 flex items-center justify-between">
-        <div>
-          <p class="text-xs text-slate-500 font-semibold">Total LKM Tuntas</p>
-          <h3 id="statTuntas" class="text-2xl font-extrabold text-slate-800">0 / 7</h3>
+    <!-- DASHBOARD PROGRES & LIST PENDING -->
+    <section class="grid grid-cols-1 lg:grid-cols-3 gap-6 no-print">
+      <!-- STATS -->
+      <div class="lg:col-span-2 space-y-4">
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div class="bg-slate-800/60 border border-slate-700 p-4 rounded-2xl flex items-center justify-between">
+            <div>
+              <p class="text-xs text-slate-400 font-medium">LKM Tuntas</p>
+              <h3 id="statTuntas" class="text-2xl font-black text-emerald-400 mt-1">0 / 7</h3>
+            </div>
+            <div class="w-12 h-12 bg-emerald-500/10 border border-emerald-500/20 rounded-xl flex items-center justify-center text-emerald-400 text-xl">
+              <i class="fa-solid fa-circle-check"></i>
+            </div>
+          </div>
+          <div class="bg-slate-800/60 border border-slate-700 p-4 rounded-2xl flex items-center justify-between">
+            <div>
+              <p class="text-xs text-slate-400 font-medium">Rata-Rata Formatif</p>
+              <h3 id="statRataRata" class="text-2xl font-black text-indigo-400 mt-1">0</h3>
+            </div>
+            <div class="w-12 h-12 bg-indigo-500/10 border border-indigo-500/20 rounded-xl flex items-center justify-center text-indigo-400 text-xl">
+              <i class="fa-solid fa-chart-line"></i>
+            </div>
+          </div>
+          <div class="bg-slate-800/60 border border-slate-700 p-4 rounded-2xl flex items-center justify-between">
+            <div>
+              <p class="text-xs text-slate-400 font-medium">Status</p>
+              <h3 id="statStatus" class="text-sm font-bold text-amber-400 mt-1">Belum Ada Data</h3>
+            </div>
+            <div class="w-12 h-12 bg-amber-500/10 border border-amber-500/20 rounded-xl flex items-center justify-center text-amber-400 text-xl">
+              <i class="fa-solid fa-hourglass-half"></i>
+            </div>
+          </div>
         </div>
-        <i class="fa-solid fa-circle-check text-emerald-500 text-3xl"></i>
+
+        <!-- BAR PROGRES PERSENTASE -->
+        <div class="bg-slate-800/60 border border-slate-700 p-4 rounded-2xl">
+          <div class="flex justify-between items-center text-xs font-bold text-slate-300 mb-2">
+            <span>Capaian Penyelesaian</span>
+            <span id="progressPercent">0%</span>
+          </div>
+          <div class="w-full h-3 bg-slate-900 rounded-full overflow-hidden p-0.5 border border-slate-700">
+            <div id="progressBar" class="h-full bg-gradient-to-r from-indigo-500 to-emerald-400 rounded-full transition-all duration-500" style="width: 0%"></div>
+          </div>
+        </div>
       </div>
-      <div class="bg-white p-4 rounded-xl shadow border-l-4 border-blue-500 flex items-center justify-between">
+
+      <!-- LIST LKM BELUM DI-UPLOAD -->
+      <div class="bg-slate-800/60 border border-slate-700 rounded-2xl p-4 flex flex-col justify-between">
         <div>
-          <p class="text-xs text-slate-500 font-semibold">Rata-Rata Formatif</p>
-          <h3 id="statRataRata" class="text-2xl font-extrabold text-slate-800">0</h3>
+          <h3 class="text-xs font-bold text-amber-400 uppercase tracking-wider mb-3 flex items-center gap-2">
+            <i class="fa-solid fa-list-check"></i> Tugas Yang Belum Di-upload
+          </h3>
+          <ul id="pendingLkmList" class="space-y-2 max-h-48 overflow-y-auto text-xs text-slate-300 pr-1">
+            <li class="text-slate-500 italic">Masukkan NIS untuk melihat tugas pending...</li>
+          </ul>
         </div>
-        <i class="fa-solid fa-chart-line text-blue-500 text-3xl"></i>
-      </div>
-      <div class="bg-white p-4 rounded-xl shadow border-l-4 border-amber-500 flex items-center justify-between">
-        <div>
-          <p class="text-xs text-slate-500 font-semibold">Status Kelengkapan</p>
-          <h3 id="statStatus" class="text-sm font-bold text-amber-600">Belum Lengkap</h3>
+        <div class="mt-4 pt-3 border-t border-slate-700/50 text-[11px] text-slate-400 flex items-center gap-2">
+          <i class="fa-solid fa-circle-info text-indigo-400"></i> Lengkapi seluruh LKM untuk membuka badge kelulusan.
         </div>
-        <i class="fa-solid fa-clock text-amber-500 text-3xl"></i>
       </div>
     </section>
 
-    <!-- DAFTAR CARD LKM (1 - 7) -->
+    <!-- CARDS LKM -->
     <section class="no-print">
-      <h2 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
-        <i class="fa-solid fa-book-open text-blue-600"></i> Lembar Kerja Murid (LKM 1 - 7)
+      <h2 class="text-sm font-bold text-slate-300 mb-4 uppercase tracking-wider flex items-center gap-2">
+        <i class="fa-solid fa-layer-group text-indigo-400"></i> Lembar Kerja Murid (LKM 1 - 7)
       </h2>
-      <div id="lkmContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        <!-- Kartu LKM Di-render Otomatis via JavaScript -->
-      </div>
+      <div id="lkmContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
     </section>
 
-    <!-- TAMPILAN CETAK (PRINT ONLY) -->
-    <div class="hidden print-only p-8 bg-white text-black">
-      <div class="text-center border-b-2 border-black pb-4 mb-6">
-        <h2 class="text-xl font-bold uppercase">SMP NEGERI 2 BELANG</h2>
-        <p class="text-sm">REKAPITULASI PENILAIAN FORMATIF IPA (FASE D)</p>
-        <p class="text-xs">Guru Pengampu: N. Tora, S.Pd.</p>
+    <!-- LEADERBOARD REAL-TIME -->
+    <section class="bg-slate-800/60 border border-slate-700 rounded-2xl p-5 no-print">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-sm font-bold text-slate-300 uppercase tracking-wider flex items-center gap-2">
+          <i class="fa-solid fa-trophy text-amber-400"></i> Leaderboard Progress Siswa
+        </h2>
+        <span class="text-xs text-slate-400">Real-time Sync</span>
       </div>
-      <div class="mb-4 text-xs">
-        <p><strong>NIS:</strong> <span id="printNis">-</span></p>
-        <p><strong>Nama Siswa:</strong> <span id="printNama">-</span></p>
-        <p><strong>Kelas:</strong> <span id="printKelas">-</span></p>
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs text-slate-300">
+          <thead class="bg-slate-900/80 text-slate-400 uppercase font-semibold border-b border-slate-700">
+            <tr>
+              <th class="p-3">Peringkat</th>
+              <th class="p-3">Nama Siswa</th>
+              <th class="p-3">Kelas</th>
+              <th class="p-3 text-center">LKM Tuntas</th>
+              <th class="p-3 text-center">Rata-Rata Formatif</th>
+            </tr>
+          </thead>
+          <tbody id="leaderboardBody" class="divide-y divide-slate-700/50">
+            <tr><td colspan="5" class="p-4 text-center text-slate-500">Memuat leaderboard...</td></tr>
+          </tbody>
+        </table>
       </div>
-      <table class="w-full text-xs border-collapse border border-black mb-6">
-        <thead>
-          <tr class="bg-slate-200">
-            <th class="border border-black p-2">LKM</th>
-            <th class="border border-black p-2">Materi Pembelajaran</th>
-            <th class="border border-black p-2">Nilai Formatif</th>
-            <th class="border border-black p-2">Verifikasi TTD Guru</th>
-          </tr>
-        </thead>
-        <tbody id="printTableBody">
-          <!-- Data Cetak -->
-        </tbody>
-      </table>
-      <div class="flex justify-end mt-12 text-xs">
-        <div class="text-center">
-          <p>Guru Mata Pelajaran IPA</p>
-          <div class="h-16"></div>
-          <p class="font-bold underline">N. Tora, S.Pd.</p>
-        </div>
-      </div>
-    </div>
+    </section>
 
   </main>
 
-  <!-- FIREBASE SDK & CORE APPLICATION LOGIC -->
+  <!-- MODAL MOTIVASI -->
+  <div id="motivationModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-slate-800 border border-indigo-500/30 rounded-3xl max-w-sm w-full p-6 text-center shadow-2xl relative">
+      <div class="w-20 h-20 bg-indigo-500/20 border border-indigo-500/40 rounded-full flex items-center justify-center mx-auto mb-4 animate-bounce-short">
+        <i id="motivationIcon" class="fa-solid fa-rocket text-indigo-400 text-4xl"></i>
+      </div>
+      <h3 id="motivationTitle" class="text-xl font-black text-white mb-2">Luar Biasa!</h3>
+      <p id="motivationText" class="text-xs text-slate-300 mb-6 leading-relaxed">Tugas berhasil tersimpan secara online!</p>
+      <button onclick="closeModal()" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 rounded-xl text-xs shadow-lg shadow-indigo-600/30 transition">
+        Lanjutkan Belajar!
+      </button>
+    </div>
+  </div>
+
+  <!-- PRINT VIEW -->
+  <div class="hidden print-only p-8 bg-white text-black">
+    <div class="text-center border-b-2 border-black pb-4 mb-6">
+      <h2 class="text-xl font-bold uppercase">SMP NEGERI 2 BELANG</h2>
+      <p class="text-sm">REKAPITULASI PENILAIAN FORMATIF IPA (FASE D)</p>
+      <p class="text-xs">Guru Pengampu: N. Tora, S.Pd.</p>
+    </div>
+    <div class="mb-4 text-xs">
+      <p><strong>NIS:</strong> <span id="printNis">-</span></p>
+      <p><strong>Nama Siswa:</strong> <span id="printNama">-</span></p>
+      <p><strong>Kelas:</strong> <span id="printKelas">-</span></p>
+    </div>
+    <table class="w-full text-xs border-collapse border border-black mb-6">
+      <thead>
+        <tr class="bg-slate-200">
+          <th class="border border-black p-2">LKM</th>
+          <th class="border border-black p-2">Materi Pembelajaran</th>
+          <th class="border border-black p-2">Nilai Formatif</th>
+          <th class="border border-black p-2">Verifikasi TTD Guru</th>
+        </tr>
+      </thead>
+      <tbody id="printTableBody"></tbody>
+    </table>
+    <div class="flex justify-end mt-12 text-xs">
+      <div class="text-center">
+        <p>Guru Mata Pelajaran IPA</p>
+        <div class="h-16"></div>
+        <p class="font-bold underline">N. Tora, S.Pd.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- FIREBASE LOGIC -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getFirestore, doc, setDoc, getDoc, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
     import { getStorage, ref, uploadString, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
 
-    // Konfigurasi Firebase dari Proyek Aplikasi-Nilai-IPA-SMPN2Belang
     const firebaseConfig = {
       apiKey: "AIzaSyBD53DUan3_58TxIOK3pFsAWFay07mdLZ",
       authDomain: "aplikasi-nilai-ipa-smpn2belang.firebaseapp.com",
@@ -177,10 +238,18 @@
       { id: 'lkm7', title: 'LKM 7: Jurnal Refleksi Diri', desc: 'Evaluasi & Refleksi Belajar Mandiri' }
     ];
 
+    const motivations = [
+      { icon: 'fa-rocket', title: 'Kerja Bagus!', text: 'Satu langkah lagi menuju pemahaman sempurna!' },
+      { icon: 'fa-award', title: 'Hebat Sekali!', text: 'Tugas kamu tersimpan aman. Tetap semangat!' },
+      { icon: 'fa-fire', title: 'Luar Biasa!', text: 'Kamu makin dekat untuk menyelesaikan seluruh LKM!' },
+      { icon: 'fa-star', title: 'Sempurna!', text: 'Kerja kerasmu sangat membanggakan!' }
+    ];
+
     let currentSiswaData = {};
 
     window.addEventListener('DOMContentLoaded', () => {
       renderLkmCards();
+      initLeaderboard();
     });
 
     function renderLkmCards() {
@@ -192,26 +261,26 @@
         const nilai = currentSiswaData[`${lkm.id}_nilai`] || 0;
 
         const card = document.createElement('div');
-        card.className = "bg-white rounded-xl shadow-sm border border-slate-200 p-4 flex flex-col justify-between";
+        card.className = "bg-slate-800/60 border border-slate-700 rounded-2xl p-4 flex flex-col justify-between backdrop-blur-sm hover:border-slate-600 transition";
         card.innerHTML = `
           <div>
             <div class="flex justify-between items-start mb-2">
-              <span class="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded-md">${lkm.id.toUpperCase()}</span>
-              <span id="badge_${lkm.id}" class="text-xs font-semibold px-2 py-1 rounded-md ${nilai === 100 ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-500'}">
+              <span class="text-[10px] font-black text-indigo-400 bg-indigo-500/10 border border-indigo-500/20 px-2 py-0.5 rounded-md uppercase">${lkm.id}</span>
+              <span class="text-xs font-semibold px-2 py-0.5 rounded-md ${nilai === 100 ? 'bg-emerald-500/10 border border-emerald-500/20 text-emerald-400' : 'bg-slate-700/50 text-slate-400'}">
                 ${nilai === 100 ? 'Tuntas (100)' : 'Belum Selesai'}
               </span>
             </div>
-            <h3 class="text-sm font-bold text-slate-800 mb-1">${lkm.title}</h3>
-            <p class="text-xs text-slate-500 mb-3">${lkm.desc}</p>
+            <h3 class="text-sm font-bold text-white mb-1">${lkm.title}</h3>
+            <p class="text-xs text-slate-400 mb-3">${lkm.desc}</p>
             
-            <div class="mb-3 bg-slate-50 p-2 rounded-lg border border-slate-100 text-center min-h-[110px] flex items-center justify-center">
-              ${fotoUrl ? `<img src="${fotoUrl}" class="max-h-24 rounded shadow-sm object-cover mx-auto" />` : `<span class="text-xs text-slate-400"><i class="fa-solid fa-image text-xl block mb-1"></i>Belum Ada Foto TTD</span>`}
+            <div class="mb-3 bg-slate-900/80 p-2 rounded-xl border border-slate-700/50 text-center min-h-[110px] flex items-center justify-center">
+              ${fotoUrl ? `<img src="${fotoUrl}" class="max-h-24 rounded-lg shadow object-cover mx-auto" />` : `<span class="text-xs text-slate-500"><i class="fa-solid fa-image text-xl block mb-1"></i>Belum Ada Foto TTD</span>`}
             </div>
           </div>
 
           <div>
             <input type="file" id="file_${lkm.id}" accept="image/*" class="hidden" onchange="uploadFotoTTD('${lkm.id}')" />
-            <button onclick="document.getElementById('file_${lkm.id}').click()" class="w-full bg-slate-800 hover:bg-slate-900 text-white text-xs font-semibold py-2 rounded-lg flex items-center justify-center gap-1.5 transition">
+            <button onclick="document.getElementById('file_${lkm.id}').click()" class="w-full bg-slate-700 hover:bg-slate-600 text-white text-xs font-bold py-2.5 rounded-xl flex items-center justify-center gap-2 transition">
               <i class="fa-solid fa-camera"></i> ${fotoUrl ? 'Ganti Foto TTD' : 'Upload Foto TTD Guru'}
             </button>
           </div>
@@ -225,10 +294,7 @@
 
     window.muatDataSiswa = async function() {
       const nis = document.getElementById('inputNis').value.trim();
-      if (!nis) {
-        alert("Silakan masukkan NIS murid terlebih dahulu!");
-        return;
-      }
+      if (!nis) { alert("Masukkan NIS murid!"); return; }
 
       try {
         const docRef = doc(db, "siswa_lkm", nis);
@@ -239,14 +305,12 @@
           document.getElementById('inputNama').value = currentSiswaData.nama || '';
           document.getElementById('inputKelas').value = currentSiswaData.kelas || 'VIII-A';
           renderLkmCards();
-          alert("Data siswa berhasil dimuat dari Cloud Firebase!");
         } else {
-          alert("Data siswa belum ditemukan di Cloud Firebase. Data baru akan otomatis dibuat saat pertama kali mengunggah foto TTD LKM.");
+          alert("Data siswa baru siap dibuat saat mengunggah foto TTD.");
           currentSiswaData = {};
           renderLkmCards();
         }
 
-        // Sinkronisasi Otomatis Secara Real-Time
         onSnapshot(docRef, (snapshot) => {
           if (snapshot.exists()) {
             currentSiswaData = snapshot.data();
@@ -255,8 +319,7 @@
         });
 
       } catch (err) {
-        console.error("Gagal memuat data dari Firebase:", err);
-        alert("Terjadi kesalahan koneksi saat memuat data.");
+        console.error("Gagal memuat:", err);
       }
     };
 
@@ -266,11 +329,7 @@
       const kelas = document.getElementById('inputKelas').value;
       const fileInput = document.getElementById(`file_${lkmId}`);
 
-      if (!nis || !nama) {
-        alert("Harap isi NIS dan Nama Siswa sebelum mengunggah foto TTD!");
-        fileInput.value = '';
-        return;
-      }
+      if (!nis || !nama) { alert("Isi NIS & Nama Siswa terlebih dahulu!"); fileInput.value = ''; return; }
 
       const file = fileInput.files[0];
       if (!file) return;
@@ -279,12 +338,10 @@
       reader.onload = async (e) => {
         const base64Image = e.target.result;
         try {
-          // 1. Upload File Foto ke Firebase Storage
           const storageRef = ref(storage, `ttd_lkm/${nis}_${lkmId}.jpg`);
           await uploadString(storageRef, base64Image, 'data_url');
           const downloadUrl = await getDownloadURL(storageRef);
 
-          // 2. Simpan URL Foto dan Nilai 100 ke Firestore
           const docRef = doc(db, "siswa_lkm", nis);
           await setDoc(docRef, {
             nis: nis,
@@ -295,10 +352,10 @@
             lastUpdated: new Date()
           }, { merge: true });
 
-          alert(`Foto TTD ${lkmId.toUpperCase()} berhasil tersimpan secara online! Status nilai otomatis tuntas (100).`);
+          showMotivationModal();
         } catch (error) {
-          console.error("Gagal simpan ke Firebase:", error);
-          alert("Gagal mengunggah foto TTD ke Cloud. Pastikan Firestore & Storage sudah diaktifkan.");
+          console.error("Upload error:", error);
+          alert("Gagal mengunggah foto ke cloud.");
         }
       };
 
@@ -308,27 +365,102 @@
     function updateStats() {
       let tuntasCount = 0;
       let totalNilai = 0;
+      const pendingListEl = document.getElementById('pendingLkmList');
+      pendingListEl.innerHTML = '';
 
       lkmList.forEach(lkm => {
         const nilai = currentSiswaData[`${lkm.id}_nilai`] || 0;
-        if (nilai === 100) tuntasCount++;
-        totalNilai += nilai;
+        if (nilai === 100) {
+          tuntasCount++;
+          totalNilai += nilai;
+        } else {
+          const li = document.createElement('li');
+          li.className = "flex items-center gap-2 bg-slate-900/50 p-2 rounded-lg border border-slate-700/50 text-amber-300";
+          li.innerHTML = `<i class="fa-solid fa-circle-exclamation text-amber-400"></i> ${lkm.title}`;
+          pendingListEl.appendChild(li);
+        }
       });
 
+      if (pendingListEl.children.length === 0) {
+        pendingListEl.innerHTML = '<li class="text-emerald-400 font-bold flex items-center gap-2"><i class="fa-solid fa-circle-check"></i> Selamat! Semua LKM telah tuntas!</li>';
+      }
+
       const rataRata = Math.round(totalNilai / lkmList.length);
+      const percent = Math.round((tuntasCount / lkmList.length) * 100);
 
       document.getElementById('statTuntas').innerText = `${tuntasCount} / ${lkmList.length}`;
       document.getElementById('statRataRata').innerText = rataRata;
-      
+      document.getElementById('progressPercent').innerText = `${percent}%`;
+      document.getElementById('progressBar').style.width = `${percent}%`;
+
       const statusEl = document.getElementById('statStatus');
       if (tuntasCount === lkmList.length) {
-        statusEl.innerText = "LENGKAP / TUNTAS";
-        statusEl.className = "text-sm font-bold text-emerald-600";
+        statusEl.innerText = "LENGKAP";
+        statusEl.className = "text-sm font-bold text-emerald-400 mt-1";
       } else {
-        statusEl.innerText = `${lkmList.length - tuntasCount} LKM Belum`;
-        statusEl.className = "text-sm font-bold text-amber-600";
+        statusEl.innerText = `${lkmList.length - tuntasCount} Belum`;
+        statusEl.className = "text-sm font-bold text-amber-400 mt-1";
       }
     }
+
+    function initLeaderboard() {
+      const colRef = collection(db, "siswa_lkm");
+      onSnapshot(colRef, (snapshot) => {
+        let list = [];
+        snapshot.forEach(doc => {
+          const data = doc.data();
+          let count = 0;
+          let total = 0;
+          lkmList.forEach(lkm => {
+            if (data[`${lkm.id}_nilai`] === 100) {
+              count++;
+              total += 100;
+            }
+          });
+          list.push({
+            nama: data.nama || 'Tanpa Nama',
+            kelas: data.kelas || '-',
+            tuntas: count,
+            rata: Math.round(total / lkmList.length)
+          });
+        });
+
+        list.sort((a, b) => b.tuntas - a.tuntas || b.rata - a.rata);
+
+        const tbody = document.getElementById('leaderboardBody');
+        tbody.innerHTML = '';
+
+        if (list.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="5" class="p-4 text-center text-slate-500">Belum ada siswa yang mengunggah tugas.</td></tr>';
+          return;
+        }
+
+        list.forEach((item, idx) => {
+          const tr = document.createElement('tr');
+          tr.className = "hover:bg-slate-700/30 transition";
+          tr.innerHTML = `
+            <td class="p-3 font-bold text-indigo-400">#${idx + 1}</td>
+            <td class="p-3 font-semibold text-white">${item.nama}</td>
+            <td class="p-3 text-slate-400">${item.kelas}</td>
+            <td class="p-3 text-center font-bold text-emerald-400">${item.tuntas} / 7</td>
+            <td class="p-3 text-center font-bold text-indigo-300">${item.rata}</td>
+          `;
+          tbody.appendChild(tr);
+        });
+      });
+    }
+
+    function showMotivationModal() {
+      const randomMsg = motivations[Math.floor(Math.random() * motivations.length)];
+      document.getElementById('motivationIcon').className = `fa-solid ${randomMsg.icon} text-indigo-400 text-4xl`;
+      document.getElementById('motivationTitle').innerText = randomMsg.title;
+      document.getElementById('motivationText').innerText = randomMsg.text;
+      document.getElementById('motivationModal').classList.remove('hidden');
+    }
+
+    window.closeModal = function() {
+      document.getElementById('motivationModal').classList.add('hidden');
+    };
 
     function preparePrintTable() {
       document.getElementById('printNis').innerText = document.getElementById('inputNis').value || '-';
@@ -347,9 +479,7 @@
           <td class="border border-black p-2 font-bold text-center">${lkm.id.toUpperCase()}</td>
           <td class="border border-black p-2">${lkm.title}</td>
           <td class="border border-black p-2 text-center font-bold">${nilai}</td>
-          <td class="border border-black p-2 text-center">
-            ${fotoUrl ? 'Terverifikasi (Ada Foto TTD)' : 'Belum Ada TTD'}
-          </td>
+          <td class="border border-black p-2 text-center">${fotoUrl ? 'Terverifikasi' : 'Belum Ada'}</td>
         `;
         tbody.appendChild(tr);
       });
