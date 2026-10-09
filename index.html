@@ -13,12 +13,13 @@
     }
     .animate-bounce-short { animation: bounce-short 1s ease-in-out infinite; }
     
+    /* Pengaturan Sembunyikan Elemen Normal saat di-Print */
+    .print-only-siswa, .print-only-guru { display: none; }
+
     /* Pengaturan Khusus Cetak Laporan */
     @media print {
       body { background-color: white !important; color: black !important; }
       .no-print { display: none !important; }
-      .print-only-siswa { display: none; }
-      .print-only-guru { display: none; }
       
       body.mode-print-siswa .print-only-siswa { display: block !important; }
       body.mode-print-guru .print-only-guru { display: block !important; }
