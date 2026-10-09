@@ -44,7 +44,7 @@
           <i class="fa-solid fa-user"></i> Cetak Per Siswa
         </button>
         <button onclick="cetakLaporanGuru()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-3 py-2 rounded-xl text-xs flex items-center gap-2 shadow-lg shadow-emerald-600/30 transition">
-          <i class="fa-solid fa-file-invoice"></i> Cetak Rekap Guru (Lengkap)
+          <i class="fa-solid fa-file-invoice"></i> Cetak Rekap Guru (Centang LKM)
         </button>
         <button onclick="eksporExcel()" class="bg-amber-600 hover:bg-amber-500 text-slate-900 font-bold px-3 py-2 rounded-xl text-xs flex items-center gap-2 shadow-lg shadow-amber-600/30 transition">
           <i class="fa-solid fa-file-excel"></i> Ekspor Excel/CSV
@@ -227,11 +227,11 @@
     </div>
   </div>
 
-  <!-- TAMPILAN CETAK REKAP GURU KESELURUHAN (LANDSCAPE RINCI) -->
+  <!-- TAMPILAN CETAK REKAP GURU (CENTANG LKM) -->
   <div class="print-only-guru p-4 bg-white text-black font-sans">
     <div class="text-center border-b-2 border-black pb-3 mb-4">
       <h2 class="text-xl font-bold uppercase tracking-wider">SMP NEGERI 2 BELANG</h2>
-      <p class="text-xs font-bold uppercase">REKAPITULASI NILAI FORMATIF & VERIFIKASI LKM IPA (FASE D)</p>
+      <p class="text-xs font-bold uppercase">REKAPITULASI CENTANG (CHECKLIST) PENYELESAIAN LKM IPA (FASE D)</p>
       <p class="text-xs italic">Guru Mata Pelajaran: N. Tora, S.Pd.</p>
     </div>
 
@@ -247,20 +247,19 @@
           <th class="border border-black p-2 w-16">LKM 5</th>
           <th class="border border-black p-2 w-16">LKM 6</th>
           <th class="border border-black p-2 w-16">LKM 7</th>
-          <th class="border border-black p-2 w-20">Tuntas</th>
-          <th class="border border-black p-2 w-20">Rata-Rata</th>
+          <th class="border border-black p-2 w-20">Total Tuntas</th>
         </tr>
       </thead>
       <tbody id="printTableBodyGuru">
-        <!-- Rincian Nilai Semua Siswa -->
+        <!-- Checklist Matrix Semua Siswa -->
       </tbody>
     </table>
 
     <div class="flex justify-between items-end mt-12 text-xs px-8">
       <div class="text-center">
         <p class="mb-12">Mengetahui,<br>Kepala SMP Negeri 2 Belang</p>
-        <p class="font-bold underline">(....................................................)</p>
-        <p>NIP. -</p>
+        <p class="font-bold underline">Metty Atuti, S.Pd.</p>
+        <p>NIP. 19690528 199412 2 004</p>
       </div>
       <div class="text-center">
         <p class="mb-12">Belang, Guru Mata Pelajaran IPA</p>
@@ -592,26 +591,32 @@
       tbody.innerHTML = '';
 
       if (globalRawSiswaData.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="11" class="p-3 text-center italic">Belum ada data nilai siswa.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="10" class="p-3 text-center italic">Belum ada data siswa.</td></tr>';
         return;
       }
 
       globalRawSiswaData.forEach((item, idx) => {
         const d = item.dataFull;
+        const c2 = d.lkm2_nilai === 100 ? '✓' : '-';
+        const c3 = d.lkm3_nilai === 100 ? '✓' : '-';
+        const c4 = d.lkm4_nilai === 100 ? '✓' : '-';
+        const c5 = d.lkm5_nilai === 100 ? '✓' : '-';
+        const c6 = d.lkm6_nilai === 100 ? '✓' : '-';
+        const c7 = d.lkm7_nilai === 100 ? '✓' : '-';
+
         const tr = document.createElement('tr');
         tr.className = "text-center";
         tr.innerHTML = `
           <td class="border border-black p-2 font-bold">${idx + 1}</td>
           <td class="border border-black p-2 text-left font-semibold">${item.nama}</td>
           <td class="border border-black p-2">${item.kelas}</td>
-          <td class="border border-black p-2">${d.lkm2_nilai || 0}</td>
-          <td class="border border-black p-2">${d.lkm3_nilai || 0}</td>
-          <td class="border border-black p-2">${d.lkm4_nilai || 0}</td>
-          <td class="border border-black p-2">${d.lkm5_nilai || 0}</td>
-          <td class="border border-black p-2">${d.lkm6_nilai || 0}</td>
-          <td class="border border-black p-2">${d.lkm7_nilai || 0}</td>
-          <td class="border border-black p-2 font-bold text-emerald-800">${item.tuntas} / 6</td>
-          <td class="border border-black p-2 font-bold">${item.rata}</td>
+          <td class="border border-black p-2 font-bold ${c2 === '✓' ? 'text-emerald-700' : 'text-slate-400'}">${c2}</td>
+          <td class="border border-black p-2 font-bold ${c3 === '✓' ? 'text-emerald-700' : 'text-slate-400'}">${c3}</td>
+          <td class="border border-black p-2 font-bold ${c4 === '✓' ? 'text-emerald-700' : 'text-slate-400'}">${c4}</td>
+          <td class="border border-black p-2 font-bold ${c5 === '✓' ? 'text-emerald-700' : 'text-slate-400'}">${c5}</td>
+          <td class="border border-black p-2 font-bold ${c6 === '✓' ? 'text-emerald-700' : 'text-slate-400'}">${c6}</td>
+          <td class="border border-black p-2 font-bold ${c7 === '✓' ? 'text-emerald-700' : 'text-slate-400'}">${c7}</td>
+          <td class="border border-black p-2 font-bold text-indigo-800">${item.tuntas} / 6</td>
         `;
         tbody.appendChild(tr);
       });
@@ -642,17 +647,17 @@
         return;
       }
 
-      let csv = "No,Nama Siswa,Kelas,LKM 2,LKM 3,LKM 4,LKM 5,LKM 6,LKM 7,LKM Tuntas,Rata-Rata Formatif\n";
+      let csv = "No,Nama Siswa,Kelas,LKM 2,LKM 3,LKM 4,LKM 5,LKM 6,LKM 7,LKM Tuntas\n";
       globalRawSiswaData.forEach((item, idx) => {
         const d = item.dataFull;
-        csv += `"${idx + 1}","${item.nama}","${item.kelas}","${d.lkm2_nilai || 0}","${d.lkm3_nilai || 0}","${d.lkm4_nilai || 0}","${d.lkm5_nilai || 0}","${d.lkm6_nilai || 0}","${d.lkm7_nilai || 0}","${item.tuntas} / 6","${item.rata}"\n`;
+        csv += `"${idx + 1}","${item.nama}","${item.kelas}","${d.lkm2_nilai || 0}","${d.lkm3_nilai || 0}","${d.lkm4_nilai || 0}","${d.lkm5_nilai || 0}","${d.lkm6_nilai || 0}","${d.lkm7_nilai || 0}","${item.tuntas} / 6"\n`;
       });
 
       const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
       const link = document.createElement("a");
       const url = URL.createObjectURL(blob);
       link.setAttribute("href", url);
-      link.setAttribute("download", `Rekap_Nilai_IPA_SMPN2Belang_Pak_Tora.csv`);
+      link.setAttribute("download", `Rekap_Checklist_LKM_IPA_SMPN2Belang.csv`);
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
