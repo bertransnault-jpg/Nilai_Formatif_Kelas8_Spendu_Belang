@@ -164,7 +164,7 @@
           </button>
 
           <button onclick="bukaModalInputGuru()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-3 py-2.5 rounded-xl text-xs flex items-center gap-1.5 shadow transition">
-            <i class="fa-solid fa-pen-to-square"></i> Input Nilai Sumatif/Sikap
+            <i class="fa-solid fa-pen-to-square"></i> Input Nilai Sumatif
           </button>
         </div>
       </div>
@@ -180,7 +180,7 @@
               <th class="p-3">Nilai Sumatif<br><span class="text-[9px] text-amber-400 font-normal">(Belum Ujian)</span></th>
               <th class="p-3">Nilai Formatif<br><span class="text-[9px] text-indigo-300 font-normal">(Rata-rata LKM)</span></th>
               <th class="p-3">Kehadiran (%)</th>
-              <th class="p-3">Nilai Sikap<br><span class="text-[9px] text-amber-400 font-normal">(Belum Diisi)</span></th>
+              <th class="p-3">Nilai Sikap<br><span class="text-[9px] text-emerald-400 font-normal">(Otomatis dari HP Pak Guru)</span></th>
               <th class="p-3">Nilai Akhir Raport</th>
               <th class="p-3 text-left">Aksi Raport</th>
             </tr>
@@ -244,7 +244,7 @@
   <div id="modalInputGuru" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
     <div class="bg-slate-800 border border-slate-700 rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-4">
       <div class="flex justify-between items-center border-b border-slate-700 pb-3">
-        <h3 class="text-sm font-bold text-white uppercase"><i class="fa-solid fa-keyboard text-emerald-400"></i> Input Penilaian Sumatif/Sikap</h3>
+        <h3 class="text-sm font-bold text-white uppercase"><i class="fa-solid fa-keyboard text-emerald-400"></i> Input Nilai Sumatif</h3>
         <button onclick="tutupModalInputGuru()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
       </div>
       <div class="space-y-3 text-xs">
@@ -266,15 +266,9 @@
             <input type="number" id="inputGuruSumatif" min="0" max="100" placeholder="Kosongkan jika belum ujian" class="w-full p-2.5 bg-slate-900 border border-slate-700 rounded-xl text-white outline-none">
           </div>
         </div>
-        <div class="grid grid-cols-2 gap-2">
-          <div>
-            <label class="block text-slate-400 font-semibold mb-1">Nilai Sikap (Opsional)</label>
-            <input type="number" id="inputGuruSikap" min="0" max="100" placeholder="Kosongkan jika belum diisi" class="w-full p-2.5 bg-slate-900 border border-slate-700 rounded-xl text-white outline-none">
-          </div>
-          <div>
-            <label class="block text-slate-400 font-semibold mb-1">Kehadiran (%)</label>
-            <input type="number" id="inputGuruHadir" min="0" max="100" placeholder="95" class="w-full p-2.5 bg-slate-900 border border-slate-700 rounded-xl text-white outline-none">
-          </div>
+        <div>
+          <label class="block text-slate-400 font-semibold mb-1">Kehadiran (%)</label>
+          <input type="number" id="inputGuruHadir" min="0" max="100" placeholder="95" class="w-full p-2.5 bg-slate-900 border border-slate-700 rounded-xl text-white outline-none">
         </div>
       </div>
       <div class="pt-2 flex justify-end gap-2">
@@ -332,7 +326,7 @@
           <td id="raportCellNilaiAkhir" class="border border-black p-2 text-center font-bold">0</td>
           <td class="border border-black p-2 text-center">Sangat Baik</td>
           <td id="raportCellHadir" class="border border-black p-2 text-center">0%</td>
-          <td id="raportCellSikap" class="border border-black p-2 text-center">-</td>
+          <td id="raportCellSikap" class="border border-black p-2 text-center">Sangat Baik (HP)</td>
         </tr>
       </tbody>
     </table>
@@ -556,7 +550,7 @@
             rataFormatif: count > 0 ? Math.round(totalFormatif / lkmList.length) : 0,
             sumatif: data.sumatif !== undefined ? data.sumatif : '-',
             kehadiran: data.kehadiran || 95,
-            sikap: data.sikap !== undefined ? data.sikap : '-',
+            sikap: data.sikap !== undefined ? data.sikap : 'Otomatis dari HP Pak Guru',
             dataFull: data
           });
         });
@@ -604,7 +598,6 @@
       }
 
       filteredList.forEach((item, idx) => {
-        // Jika sumatif belum diisi, nilai akhir dihitung dari formatif saja atau dikosongkan
         const sumatifVal = typeof item.sumatif === 'number' ? item.sumatif : 0;
         const nilaiAkhir = sumatifVal > 0 ? Math.round((sumatifVal * 0.6) + (item.rataFormatif * 0.4)) : item.rataFormatif;
 
@@ -617,7 +610,7 @@
           <td class="p-3 font-bold text-amber-400">${item.sumatif !== '-' ? item.sumatif : '<span class="text-slate-500 italic">Belum Ujian</span>'}</td>
           <td class="p-3 font-bold text-indigo-300">${item.rataFormatif}</td>
           <td class="p-3">${item.kehadiran}%</td>
-          <td class="p-3 text-amber-400">${item.sikap !== '-' ? item.sikap : '<span class="text-slate-500 italic">Belum Diisi</span>'}</td>
+          <td class="p-3 text-emerald-400 font-medium">${item.sikap}</td>
           <td class="p-3 font-black text-amber-400 text-sm">${nilaiAkhir}</td>
           <td class="p-3 text-left">
             <button type="button" onclick="cetakRaportSiswa('${item.idDoc}')" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-3 py-1.5 rounded-lg text-xs shadow flex items-center gap-1.5 transition cursor-pointer">
@@ -659,7 +652,7 @@
       document.getElementById('raportPrintKelas').innerText = siswa.kelas;
       document.getElementById('raportCellNilaiAkhir').innerText = nilaiAkhir;
       document.getElementById('raportCellHadir').innerText = `${siswa.kehadiran}%`;
-      document.getElementById('raportCellSikap').innerText = siswa.sikap !== '-' ? siswa.sikap : '-';
+      document.getElementById('raportCellSikap').innerText = siswa.sikap;
       document.getElementById('raportCellDeskripsi').innerText = deskripsiNarasi;
       document.getElementById('tanggalCetakRaport').innerText = new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
 
@@ -733,7 +726,6 @@
       const nama = document.getElementById('inputGuruNama').value.trim();
       const kelas = document.getElementById('inputGuruKelas').value;
       const sumatifInput = document.getElementById('inputGuruSumatif').value.trim();
-      const sikapInput = document.getElementById('inputGuruSikap').value.trim();
       const hadir = parseFloat(document.getElementById('inputGuruHadir').value) || 95;
 
       if (!nama) { alert("Masukkan Nama Siswa terlebih dahulu!"); return; }
@@ -747,9 +739,6 @@
 
       if (sumatifInput !== "") {
         updateData.sumatif = parseFloat(sumatifInput);
-      }
-      if (sikapInput !== "") {
-        updateData.sikap = parseFloat(sikapInput);
       }
 
       const docId = getDocId(nama, kelas);
