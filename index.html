@@ -149,6 +149,19 @@
       <div id="lkmContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
     </section>
 
+    <!-- GALERI PENGIRIMAN GAMBAR LIVE (SISWA & GURU BISA LIHAT) -->
+    <section class="bg-slate-800/60 border border-slate-700 rounded-2xl p-4 sm:p-5 no-print shadow">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-xs sm:text-sm font-bold text-slate-300 uppercase tracking-wider flex items-center gap-2">
+          <i class="fa-solid fa-images text-indigo-400"></i> Galeri Live Pengiriman Gambar & Tugas
+        </h2>
+        <span class="text-[11px] text-slate-400">Klik gambar untuk melihat ukuran penuh</span>
+      </div>
+      <div id="liveImageGallery" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+        <p class="text-xs text-slate-500 italic col-span-full text-center py-4">Muat data siswa terlebih dahulu untuk melihat galeri kiriman gambar...</p>
+      </div>
+    </section>
+
     <!-- LEADERBOARD REAL-TIME -->
     <section class="bg-slate-800/60 border border-slate-700 rounded-2xl p-4 sm:p-5 no-print shadow">
       <div class="flex items-center justify-between mb-4">
@@ -176,6 +189,21 @@
     </section>
 
   </main>
+
+  <!-- MODAL PREVIEW GAMBAR BESAR (ZOOM) -->
+  <div id="imageModal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 hidden flex flex-col items-center justify-center p-4">
+    <div class="relative max-w-3xl w-full bg-slate-900 border border-slate-700 rounded-2xl p-4 shadow-2xl">
+      <div class="flex justify-between items-center mb-3 border-b border-slate-800 pb-2">
+        <h3 id="modalImageTitle" class="text-xs font-bold text-indigo-400 uppercase">Preview Gambar Tugas</h3>
+        <button onclick="closeImageModal()" class="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center transition">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div class="flex justify-center items-center bg-slate-950 rounded-xl overflow-hidden p-2 max-h-[70vh]">
+        <img id="modalImageElement" src="" class="max-h-[65vh] object-contain rounded-lg shadow" />
+      </div>
+    </div>
+  </div>
 
   <!-- MODAL MOTIVASI -->
   <div id="motivationModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
@@ -331,8 +359,8 @@
             <h3 class="text-sm font-bold text-white mb-1">${lkm.title}</h3>
             <p class="text-xs text-slate-400 mb-3">${lkm.desc}</p>
             
-            <div class="mb-3 bg-slate-900/80 p-2 rounded-xl border border-slate-700/50 text-center min-h-[110px] flex items-center justify-center">
-              ${fotoUrl ? `<img src="${fotoUrl}" class="max-h-24 rounded-lg shadow object-cover mx-auto" />` : `<span class="text-xs text-slate-500"><i class="fa-solid fa-image text-xl block mb-1"></i>Belum Ada Foto TTD</span>`}
+            <div class="mb-3 bg-slate-900/80 p-2 rounded-xl border border-slate-700/50 text-center min-h-[110px] flex items-center justify-center cursor-pointer group" ${fotoUrl ? `onclick="openImageModal('${fotoUrl}', '${lkm.title}')"` : ''}>
+              ${fotoUrl ? `<img src="${fotoUrl}" class="max-h-24 rounded-lg shadow object-cover mx-auto group-hover:scale-105 transition" title="Klik untuk memperbesar" />` : `<span class="text-xs text-slate-500"><i class="fa-solid fa-image text-xl block mb-1"></i>Belum Ada Foto TTD</span>`}
             </div>
           </div>
 
@@ -347,6 +375,7 @@
       });
 
       updateStats();
+      updateLiveGallery();
       preparePrintTable();
     }
 
@@ -496,6 +525,43 @@
         statusEl.className = "text-sm font-bold text-amber-400 mt-1";
       }
     }
+
+    function updateLiveGallery() {
+      const galleryEl = document.getElementById('liveImageGallery');
+      galleryEl.innerHTML = '';
+
+      let hasImages = false;
+      lkmList.forEach(lkm => {
+        const fotoUrl = currentSiswaData[`${lkm.id}_foto`];
+        if (fotoUrl) {
+          hasImages = true;
+          const div = document.createElement('div');
+          div.className = "bg-slate-900 border border-slate-700 rounded-xl p-2 text-center group cursor-pointer hover:border-indigo-500 transition shadow";
+          div.onclick = () => openImageModal(fotoUrl, `${lkm.title} - ${currentSiswaData.nama || 'Siswa'}`);
+          div.innerHTML = `
+            <div class="h-20 flex items-center justify-center overflow-hidden rounded-lg mb-1 bg-slate-950">
+              <img src="${fotoUrl}" class="max-h-full object-cover group-hover:scale-110 transition duration-300" />
+            </div>
+            <span class="text-[10px] font-bold text-indigo-400 uppercase tracking-tight block">${lkm.id}</span>
+          `;
+          galleryEl.appendChild(div);
+        }
+      });
+
+      if (!hasImages) {
+        galleryEl.innerHTML = '<p class="text-xs text-slate-500 italic col-span-full text-center py-4">Belum ada foto/gambar tugas yang diunggah oleh siswa ini.</p>';
+      }
+    }
+
+    window.openImageModal = function(url, title) {
+      document.getElementById('modalImageElement').src = url;
+      document.getElementById('modalImageTitle').innerText = title || 'Preview Gambar Tugas';
+      document.getElementById('imageModal').classList.remove('hidden');
+    };
+
+    window.closeImageModal = function() {
+      document.getElementById('imageModal').classList.add('hidden');
+    };
 
     function initLeaderboard() {
       const colRef = collection(db, "siswa_lkm");
@@ -664,6 +730,7 @@
       }
 
       let csv = "No,Nama Siswa,Kelas,LKM 2,LKM 3,LKM 4,LKM 5,LKM 6,LKM 7,LKM Tuntas\n";
+      globalRawSizes = globalRawSiswaData;
       globalRawSiswaData.forEach((item, idx) => {
         const d = item.dataFull;
         csv += `"${idx + 1}","${item.nama}","${item.kelas}","${d.lkm2_nilai || 0}","${d.lkm3_nilai || 0}","${d.lkm4_nilai || 0}","${d.lkm5_nilai || 0}","${d.lkm6_nilai || 0}","${d.lkm7_nilai || 0}","${item.tuntas} / 6"\n`;
