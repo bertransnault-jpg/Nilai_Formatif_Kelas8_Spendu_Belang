@@ -13,10 +13,8 @@
     }
     .animate-bounce-short { animation: bounce-short 1s ease-in-out infinite; }
     
-    /* Sembunyikan Area Cetak di Layar Normal */
     .print-only-siswa, .print-only-guru, .print-only-raport { display: none; }
 
-    /* Pengaturan Khusus Media Cetak / Print */
     @media print {
       body { background-color: white !important; color: black !important; }
       .no-print { display: none !important; }
@@ -31,7 +29,7 @@
 </head>
 <body class="bg-slate-900 text-slate-100 font-sans min-h-screen">
 
-  <!-- HEADER RESPONSIF -->
+  <!-- HEADER -->
   <header class="bg-slate-800/90 backdrop-blur-md border-b border-slate-700 sticky top-0 z-30 no-print shadow-md">
     <div class="max-w-7xl mx-auto px-4 py-3 flex flex-col sm:flex-row items-center justify-between gap-3">
       <div>
@@ -57,7 +55,7 @@
 
   <main class="max-w-7xl mx-auto px-4 py-6 space-y-6">
 
-    <!-- FORM IDENTITAS SISWA -->
+    <!-- IDENTITAS SISWA -->
     <section class="bg-slate-800/60 border border-slate-700 rounded-2xl p-4 sm:p-5 backdrop-blur-sm no-print shadow">
       <h2 class="text-xs sm:text-sm font-bold text-slate-300 mb-3 flex items-center gap-2 uppercase tracking-wider">
         <i class="fa-solid fa-user-astronaut text-indigo-400"></i> Identitas Murid
@@ -136,13 +134,10 @@
             <li class="text-slate-500 italic">Masukkan Nama untuk melihat tugas pending...</li>
           </ul>
         </div>
-        <div class="mt-4 pt-3 border-t border-slate-700/50 text-[11px] text-slate-400 flex items-center gap-2">
-          <i class="fa-solid fa-circle-info text-indigo-400"></i> Lengkapi semua LKM untuk rekap kelulusan optimal.
-        </div>
       </div>
     </section>
 
-    <!-- TOOLS NILAI RAPORT & PENGOLAHAN DESKRIPSI -->
+    <!-- TOOLS NILAI RAPORT -->
     <section class="bg-slate-800/60 border border-slate-700 rounded-2xl p-5 no-print shadow space-y-4">
       <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-700 pb-4">
         <div>
@@ -164,7 +159,6 @@
         </div>
       </div>
 
-      <!-- TABEL RAPORT KELAS -->
       <div class="overflow-x-auto">
         <table class="w-full text-left text-xs text-slate-300 whitespace-nowrap">
           <thead class="bg-slate-900/90 text-slate-400 uppercase font-semibold border-b border-slate-700 text-center">
@@ -187,7 +181,7 @@
       </div>
     </section>
 
-    <!-- KARTU LKM (2 - 7) -->
+    <!-- KARTU LKM -->
     <section class="no-print">
       <h2 class="text-xs sm:text-sm font-bold text-slate-300 mb-4 uppercase tracking-wider flex items-center gap-2">
         <i class="fa-solid fa-layer-group text-indigo-400"></i> Lembar Kerja Murid (LKM 2 - 7)
@@ -195,26 +189,24 @@
       <div id="lkmContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
     </section>
 
-    <!-- GALERI PENGIRIMAN GAMBAR LIVE -->
+    <!-- GALERI LIVE GAMBAR -->
     <section class="bg-slate-800/60 border border-slate-700 rounded-2xl p-4 sm:p-5 no-print shadow">
       <div class="flex items-center justify-between mb-4">
         <h2 class="text-xs sm:text-sm font-bold text-slate-300 uppercase tracking-wider flex items-center gap-2">
           <i class="fa-solid fa-images text-indigo-400"></i> Galeri Live Pengiriman Gambar & Tugas
         </h2>
-        <span class="text-[11px] text-slate-400">Klik gambar untuk melihat ukuran penuh</span>
       </div>
       <div id="liveImageGallery" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
-        <p class="text-xs text-slate-500 italic col-span-full text-center py-4">Muat data siswa terlebih dahulu untuk melihat galeri kiriman gambar...</p>
+        <p class="text-xs text-slate-500 italic col-span-full text-center py-4">Muat data siswa terlebih dahulu...</p>
       </div>
     </section>
 
-    <!-- LEADERBOARD REAL-TIME -->
+    <!-- LEADERBOARD -->
     <section class="bg-slate-800/60 border border-slate-700 rounded-2xl p-4 sm:p-5 no-print shadow">
       <div class="flex items-center justify-between mb-4">
         <h2 class="text-xs sm:text-sm font-bold text-slate-300 uppercase tracking-wider flex items-center gap-2">
           <i class="fa-solid fa-trophy text-amber-400"></i> Leaderboard Progress Siswa
         </h2>
-        <span class="text-[11px] text-slate-400">Real-time Sync</span>
       </div>
       <div class="overflow-x-auto">
         <table class="w-full text-left text-xs text-slate-300 whitespace-nowrap">
@@ -236,7 +228,7 @@
 
   </main>
 
-  <!-- MODAL INPUT GURU (SUMATIF, SIKAP, KEHADIRAN) -->
+  <!-- MODAL INPUT GURU -->
   <div id="modalInputGuru" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
     <div class="bg-slate-800 border border-slate-700 rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-4">
       <div class="flex justify-between items-center border-b border-slate-700 pb-3">
@@ -245,8 +237,8 @@
       </div>
       <div class="space-y-3 text-xs">
         <div>
-          <label class="block text-slate-400 font-semibold mb-1">Pilih / Ketik Nama Siswa</label>
-          <input type="text" id="inputGuruNama" placeholder="Nama lengkap siswa yang akan dinilai..." class="w-full p-2.5 bg-slate-900 border border-slate-700 rounded-xl text-white outline-none">
+          <label class="block text-slate-400 font-semibold mb-1">Nama Lengkap Siswa</label>
+          <input type="text" id="inputGuruNama" placeholder="Nama lengkap siswa..." class="w-full p-2.5 bg-slate-900 border border-slate-700 rounded-xl text-white outline-none">
         </div>
         <div class="grid grid-cols-2 gap-2">
           <div>
@@ -259,128 +251,279 @@
           </div>
           <div>
             <label class="block text-slate-400 font-semibold mb-1">Nilai Sumatif (0-100)</label>
-            <input type="number" id="inputGuruSumatif" min="0" max="100" placeholder="Contoh: 85" class="w-full p-2.5 bg-slate-900 border border-slate-700 rounded-xl text-white outline-none">
+            <input type="number" id="inputGuruSumatif" min="0" max="100" placeholder="85" class="w-full p-2.5 bg-slate-900 border border-slate-700 rounded-xl text-white outline-none">
           </div>
         </div>
         <div class="grid grid-cols-2 gap-2">
           <div>
             <label class="block text-slate-400 font-semibold mb-1">Nilai Sikap (0-100)</label>
-            <input type="number" id="inputGuruSikap" min="0" max="100" placeholder="Contoh: 90" class="w-full p-2.5 bg-slate-900 border border-slate-700 rounded-xl text-white outline-none">
+            <input type="number" id="inputGuruSikap" min="0" max="100" placeholder="90" class="w-full p-2.5 bg-slate-900 border border-slate-700 rounded-xl text-white outline-none">
           </div>
           <div>
             <label class="block text-slate-400 font-semibold mb-1">Kehadiran (%)</label>
-            <input type="number" id="inputGuruHadir" min="0" max="100" placeholder="Contoh: 95" class="w-full p-2.5 bg-slate-900 border border-slate-700 rounded-xl text-white outline-none">
+            <input type="number" id="inputGuruHadir" min="0" max="100" placeholder="95" class="w-full p-2.5 bg-slate-900 border border-slate-700 rounded-xl text-white outline-none">
           </div>
         </div>
       </div>
       <div class="pt-2 flex justify-end gap-2">
         <button onclick="tutupModalInputGuru()" class="bg-slate-700 hover:bg-slate-600 text-white font-bold px-4 py-2 rounded-xl text-xs">Batal</button>
-        <button onclick="simpanInputGuru()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-5 py-2 rounded-xl text-xs shadow">Simpan ke Cloud</button>
+        <button onclick="simpanInputGuru()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-5 py-2 rounded-xl text-xs shadow">Simpan</button>
       </div>
     </div>
   </div>
 
-  <!-- MODAL PREVIEW GAMBAR -->
-  <div id="imageModal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 hidden flex flex-col items-center justify-center p-4">
-    <div class="relative max-w-3xl w-full bg-slate-900 border border-slate-700 rounded-2xl p-4 shadow-2xl">
-      <div class="flex justify-between items-center mb-3 border-b border-slate-800 pb-2">
-        <h3 id="modalImageTitle" class="text-xs font-bold text-indigo-400 uppercase">Preview Gambar Tugas</h3>
-        <button onclick="closeImageModal()" class="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center transition">
-          <i class="fa-solid fa-xmark"></i>
-        </button>
-      </div>
-      <div class="flex justify-center items-center bg-slate-950 rounded-xl overflow-hidden p-2 max-h-[70vh]">
-        <img id="modalImageElement" src="" class="max-h-[65vh] object-contain rounded-lg shadow" />
-      </div>
-    </div>
-  </div>
+  <!-- SCRIPT LOGIC FIREBASE & RAPORT -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getFirestore, doc, setDoc, getDoc, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-  <!-- MODAL MOTIVASI -->
-  <div id="motivationModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-slate-800 border border-indigo-500/30 rounded-3xl max-w-sm w-full p-6 text-center shadow-2xl relative">
-      <div class="w-20 h-20 bg-indigo-500/20 border border-indigo-500/40 rounded-full flex items-center justify-center mx-auto mb-4 animate-bounce-short">
-        <i id="motivationIcon" class="fa-solid fa-rocket text-indigo-400 text-4xl"></i>
-      </div>
-      <h3 id="motivationTitle" class="text-xl font-black text-white mb-2">Luar Biasa!</h3>
-      <p id="motivationText" class="text-xs text-slate-300 mb-6 leading-relaxed">Tugas berhasil tersimpan secara online!</p>
-      <button onclick="closeModal()" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 rounded-xl text-xs shadow-lg shadow-indigo-600/30 transition">
-        Lanjutkan Belajar!
-      </button>
-    </div>
-  </div>
+    const firebaseConfig = {
+      apiKey: "AIzaSyBD53DUan3_58TxIOK3pFsAWFay07mdLZ",
+      authDomain: "aplikasi-nilai-ipa-smpn2belang.firebaseapp.com",
+      projectId: "aplikasi-nilai-ipa-smpn2belang",
+      storageBucket: "aplikasi-nilai-ipa-smpn2belang.appspot.com",
+      messagingSenderId: "754730321834",
+      appId: "1:754730321834:web:71dc0230831140b2aa4d"
+    };
 
-  <!-- CETAK RAPORT RESMI SISWA -->
-  <div class="print-only-raport p-6 bg-white text-black font-sans text-xs">
-    <div class="text-center border-b-2 border-black pb-3 mb-4">
-      <h2 class="text-base font-bold uppercase tracking-wider">SMP NEGERI 2 BELANG</h2>
-      <p class="text-xs font-bold uppercase">LAPORAN HASIL BELAJAR PESERTA DIDIK (RAPORT FORMATIF & SUMATIF IPA)</p>
-      <p class="text-[11px] italic">Tahun Ajaran 2026/2027 &bull; Kurikulum Merdeka Fase D</p>
-    </div>
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
 
-    <div class="grid grid-cols-2 gap-2 mb-4 bg-slate-50 p-3 rounded border border-slate-300">
-      <p><strong>Nama Peserta Didik:</strong> <span id="raportPrintNama">-</span></p>
-      <p><strong>Kelas / Semester:</strong> <span id="raportPrintKelas">-</span> / Genap</p>
-      <p><strong>NIS / NISN:</strong> -</p>
-      <p><strong>Wali Kelas:</strong> Tim Guru Pengampu</p>
-    </div>
+    const lkmList = [
+      { id: 'lkm2', title: 'LKM 2: Gizi Seimbang & Isi Piringku', topik: 'Sistem Pencernaan & Zat Aditif' },
+      { id: 'lkm3', title: 'LKM 3: Organ & Enzim Pencernaan', topik: 'Enzim & Saluran Cerna' },
+      { id: 'lkm4', title: 'LKM 4: Pernapasan & Bahaya Rokok', topik: 'Sistem Pernapasan Manusia' },
+      { id: 'lkm5', title: 'LKM 5: Peredaran Darah & Plasma', topik: 'Sistem Peredaran Darah' },
+      { id: 'lkm6', title: 'LKM 6: Script Video Anti-Rokok', topik: 'Kampanye Kesehatan & Biotek' },
+      { id: 'lkm7', title: 'LKM 7: Jurnal Refleksi Diri', topik: 'Sistem Ekskresi & Urine' }
+    ];
 
-    <table class="w-full border-collapse border border-black mb-4">
-      <thead>
-        <tr class="bg-slate-200 text-center font-bold">
-          <th class="border border-black p-2 w-10">No</th>
-          <th class="border border-black p-2 text-left">Mata Pelajaran</th>
-          <th class="border border-black p-2 w-20">Nilai Akhir</th>
-          <th class="border border-black p-2 w-20">Capaian</th>
-          <th class="border border-black p-2 w-20">Kehadiran</th>
-          <th class="border border-black p-2 w-20">Sikap</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td class="border border-black p-2 text-center">1</td>
-          <td class="border border-black p-2 font-semibold">Ilmu Pengetahuan Alam (IPA)</td>
-          <td id="raportCellNilaiAkhir" class="border border-black p-2 text-center font-bold">0</td>
-          <td class="border border-black p-2 text-center">Sangat Baik</td>
-          <td id="raportCellHadir" class="border border-black p-2 text-center">0%</td>
-          <td id="raportCellSikap" class="border border-black p-2 text-center">0</td>
-        </tr>
-      </tbody>
-    </table>
+    let currentSiswaData = {};
+    let globalRawSiswaData = [];
 
-    <div class="border border-black p-3 rounded mb-6">
-      <h3 class="font-bold uppercase text-[11px] mb-1 underline">Deskripsi Capaian Kompetensi (Kurikulum Merdeka):</h3>
-      <p id="raportCellDeskripsi" class="text-justify leading-relaxed text-[11px] italic text-slate-800">-</p>
-    </div>
+    window.addEventListener('DOMContentLoaded', () => {
+      renderLkmCards();
+      initLeaderboard();
+    });
 
-    <div class="flex justify-between items-end mt-16 px-6">
-      <div class="text-center">
-        <p class="mb-14">Mengetahui,<br>Orang Tua / Wali Murid</p>
-        <p class="font-bold underline">( ........................................ )</p>
-      </div>
-      <div class="text-center">
-        <p class="mb-14">Belang, <span id="tanggalCetakRaport"></span><br>Guru Mata Pelajaran IPA</p>
-        <p class="font-bold underline">N. Tora, S.Pd.</p>
-        <p>NIP. Pengampu Fase D</p>
-      </div>
-    </div>
-  </div>
+    function getDocId(nama, kelas) {
+      return `${nama.trim().toLowerCase().replace(/\s+/g, '_')}_${kelas.toLowerCase()}`;
+    }
 
-  <!-- CETAK INDIVIDU SISWA -->
-  <div class="print-only-siswa p-4 bg-white text-black font-sans">
-    <div class="text-center border-b-2 border-black pb-3 mb-4">
-      <h2 class="text-lg font-bold uppercase tracking-wider">SMP NEGERI 2 BELANG</h2>
-      <p class="text-xs font-semibold">REKAPITULASI ASSESSMENT FORMATIF IPA (FASE D)</p>
-      <p class="text-[11px] italic">Guru Pengampu: N. Tora, S.Pd.</p>
-    </div>
-    
-    <div class="grid grid-cols-2 gap-2 mb-4 text-xs bg-slate-50 p-3 rounded border border-slate-300">
-      <p><strong>Nama Siswa:</strong> <span id="printNama">-</span></p>
-      <p><strong>Kelas:</strong> <span id="printKelas">-</span></p>
-    </div>
+    function renderLkmCards() {
+      const container = document.getElementById('lkmContainer');
+      container.innerHTML = '';
 
-    <table class="w-full text-xs border-collapse border border-black mb-6">
-      <thead>
-        <tr class="bg-slate-100">
-          <th class="border border-black p-2 w-16 text-center">LKM</th>
-          <th class="border border-black p-2 text-left">Materi Pembelajaran</th>
-          <th class="border border-black p
+      lkmList.forEach((lkm) => {
+        const fotoUrl = currentSiswaData[`${lkm.id}_foto`] || null;
+        const nilai = currentSiswaData[`${lkm.id}_nilai`] || 0;
+
+        const card = document.createElement('div');
+        card.className = "bg-slate-800/60 border border-slate-700 rounded-2xl p-4 flex flex-col justify-between backdrop-blur-sm hover:border-slate-600 transition";
+        card.innerHTML = `
+          <div>
+            <div class="flex justify-between items-start mb-2">
+              <span class="text-[10px] font-black text-indigo-400 bg-indigo-500/10 border border-indigo-500/20 px-2 py-0.5 rounded-md uppercase">${lkm.id}</span>
+              <span class="text-xs font-semibold px-2 py-0.5 rounded-md ${nilai === 100 ? 'bg-emerald-500/10 border border-emerald-500/20 text-emerald-400' : 'bg-slate-700/50 text-slate-400'}">
+                ${nilai === 100 ? 'Tuntas (100)' : 'Belum Selesai'}
+              </span>
+            </div>
+            <h3 class="text-sm font-bold text-white mb-1">${lkm.title}</h3>
+            <p class="text-xs text-slate-400 mb-3">${lkm.topik}</p>
+            
+            <div class="mb-3 bg-slate-900/80 p-2 rounded-xl border border-slate-700/50 text-center min-h-[110px] flex items-center justify-center">
+              ${fotoUrl ? `<img src="${fotoUrl}" class="max-h-24 rounded-lg shadow object-cover mx-auto" />` : `<span class="text-xs text-slate-500"><i class="fa-solid fa-image text-xl block mb-1"></i>Belum Ada Foto TTD</span>`}
+            </div>
+          </div>
+
+          <div>
+            <input type="file" id="file_${lkm.id}" accept="image/*" class="hidden" onchange="uploadFotoTTD('${lkm.id}')" />
+            <button id="btn_${lkm.id}" onclick="document.getElementById('file_${lkm.id}').click()" class="w-full bg-slate-700 hover:bg-slate-600 text-white text-xs font-bold py-2.5 rounded-xl flex items-center justify-center gap-2 transition">
+              <i class="fa-solid fa-camera"></i> ${fotoUrl ? 'Ganti Foto TTD' : 'Upload Foto TTD Guru'}
+            </button>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+
+      updateStats();
+    }
+
+    window.muatDataSiswa = async function() {
+      const nama = document.getElementById('inputNama').value.trim();
+      const kelas = document.getElementById('inputKelas').value;
+      if (!nama) { alert("Masukkan Nama Murid terlebih dahulu!"); return; }
+
+      const docId = getDocId(nama, kelas);
+
+      try {
+        const docRef = doc(db, "siswa_lkm", docId);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+          currentSiswaData = docSnap.data();
+          renderLkmCards();
+        } else {
+          alert("Siswa baru terdeteksi. Data akan tersimpan otomatis saat Anda mengunggah foto.");
+          currentSiswaData = { nama: nama, kelas: kelas };
+          renderLkmCards();
+        }
+      } catch (err) {
+        console.error("Gagal memuat:", err);
+      }
+    };
+
+    function initLeaderboard() {
+      const colRef = collection(db, "siswa_lkm");
+      onSnapshot(colRef, (snapshot) => {
+        let list = [];
+        snapshot.forEach(docSnap => {
+          const data = docSnap.data();
+          let count = 0;
+          let totalFormatif = 0;
+          
+          lkmList.forEach(lkm => {
+            const val = data[`${lkm.id}_nilai`] || 0;
+            if (val > 0) {
+              count++;
+              totalFormatif += val;
+            }
+          });
+
+          list.push({
+            idDoc: docSnap.id,
+            nama: data.nama || 'Tanpa Nama',
+            kelas: data.kelas || 'VIII-A',
+            tuntas: count,
+            rataFormatif: count > 0 ? Math.round(totalFormatif / lkmList.length) : 0,
+            sumatif: data.sumatif || 75,
+            kehadiran: data.kehadiran || 95,
+            sikap: data.sikap || 85,
+            dataFull: data
+          });
+        });
+
+        globalRawSiswaData = list;
+        renderTabelRaport();
+        renderLeaderboardUI(list);
+      });
+    }
+
+    function renderLeaderboardUI(list) {
+      const tbody = document.getElementById('leaderboardBody');
+      tbody.innerHTML = '';
+
+      if (list.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" class="p-4 text-center text-slate-500">Belum ada data siswa.</td></tr>';
+        return;
+      }
+
+      list.forEach((item, idx) => {
+        const tr = document.createElement('tr');
+        tr.className = "hover:bg-slate-700/30 transition";
+        tr.innerHTML = `
+          <td class="p-3 font-bold text-indigo-400">#${idx + 1}</td>
+          <td class="p-3 font-semibold text-white">${item.nama}</td>
+          <td class="p-3 text-slate-400">${item.kelas}</td>
+          <td class="p-3 text-center font-bold text-emerald-400">${item.tuntas} / 6</td>
+          <td class="p-3 text-center font-bold text-indigo-300">${item.rataFormatif}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    window.renderTabelRaport = function() {
+      const filterKelas = document.getElementById('filterKelasRaport').value;
+      const tbody = document.getElementById('tabelRaportBody');
+      tbody.innerHTML = '';
+
+      const filteredList = globalRawSiswaData.filter(item => filterKelas === 'ALL' || item.kelas === filterKelas);
+
+      if (filteredList.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="9" class="p-4 text-center text-slate-500">Data siswa tidak ditemukan. Klik tombol "Input Nilai" di atas.</td></tr>';
+        return;
+      }
+
+      filteredList.forEach((item, idx) => {
+        const nilaiAkhir = Math.round((item.sumatif * 0.6) + (item.rataFormatif * 0.4));
+
+        const tr = document.createElement('tr');
+        tr.className = "hover:bg-slate-700/30 transition text-center";
+        tr.innerHTML = `
+          <td class="p-3 font-bold text-slate-400">${idx + 1}</td>
+          <td class="p-3 font-semibold text-white text-left">${item.nama}</td>
+          <td class="p-3 text-slate-300">${item.kelas}</td>
+          <td class="p-3 font-bold text-emerald-400">${item.sumatif}</td>
+          <td class="p-3 font-bold text-indigo-300">${item.rataFormatif}</td>
+          <td class="p-3">${item.kehadiran}%</td>
+          <td class="p-3">${item.sikap}</td>
+          <td class="p-3 font-black text-amber-400 text-sm">${nilaiAkhir}</td>
+          <td class="p-3 text-left">
+            <button onclick="cetakRaportSiswa('${item.idDoc}')" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-3 py-1.5 rounded-lg text-xs shadow flex items-center gap-1.5 transition">
+              <i class="fa-solid fa-print"></i> Cetak Raport
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    };
+
+    window.bukaModalInputGuru = function() {
+      document.getElementById('modalInputGuru').classList.remove('hidden');
+    };
+
+    window.tutupModalInputGuru = function() {
+      document.getElementById('modalInputGuru').classList.add('hidden');
+    };
+
+    window.simpanInputGuru = async function() {
+      const nama = document.getElementById('inputGuruNama').value.trim();
+      const kelas = document.getElementById('inputGuruKelas').value;
+      const sumatif = parseFloat(document.getElementById('inputGuruSumatif').value) || 75;
+      const sikap = parseFloat(document.getElementById('inputGuruSikap').value) || 85;
+      const hadir = parseFloat(document.getElementById('inputGuruHadir').value) || 95;
+
+      if (!nama) { alert("Masukkan Nama Siswa terlebih dahulu!"); return; }
+
+      const docId = getDocId(nama, kelas);
+      try {
+        const docRef = doc(db, "siswa_lkm", docId);
+        await setDoc(docRef, {
+          nama: nama,
+          kelas: kelas,
+          sumatif: sumatif,
+          sikap: sikap,
+          kehadiran: hadir,
+          lastUpdated: new Date()
+        }, { merge: true });
+
+        alert("Data berhasil disimpan ke Cloud!");
+        tutupModalInputGuru();
+      } catch (err) {
+        console.error("Gagal simpan:", err);
+      }
+    };
+
+    function updateStats() {
+      let tuntasCount = 0;
+      let totalNilai = 0;
+
+      lkmList.forEach(lkm => {
+        const nilai = currentSiswaData[`${lkm.id}_nilai`] || 0;
+        if (nilai === 100) {
+          tuntasCount++;
+          totalNilai += nilai;
+        }
+      });
+
+      const rataRata = Math.round(totalNilai / lkmList.length);
+      const percent = Math.round((tuntasCount / lkmList.length) * 100);
+
+      document.getElementById('statTuntas').innerText = `${tuntasCount} / ${lkmList.length}`;
+      document.getElementById('statRataRata').innerText = rataRata;
+      document.getElementById('progressPercent').innerText = `${percent}%`;
+      document.getElementById('progressBar').style.width = `${percent}%`;
+    }
+  </script>
+</body>
+</html>
