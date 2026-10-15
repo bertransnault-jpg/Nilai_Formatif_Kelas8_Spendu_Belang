@@ -22,6 +22,10 @@
       body { background-color: white !important; color: black !important; }
       .no-print { display: none !important; }
       
+      body.mode-print-siswa { display: block !important; }
+      body.mode-print-guru { display: block !important; }
+      body.mode-print-raport { display: block !important; }
+      
       body.mode-print-siswa .print-only-siswa { display: block !important; }
       body.mode-print-guru .print-only-guru { display: block !important; }
       body.mode-print-raport .print-only-raport { display: block !important; }
@@ -229,10 +233,11 @@
               <th class="p-3">Kelas</th>
               <th class="p-3 text-center">LKM Tuntas</th>
               <th class="p-3 text-center">Rata-Rata Formatif</th>
+              <th class="p-3 text-center">Waktu Kirim Terakhir</th>
             </tr>
           </thead>
           <tbody id="leaderboardBody" class="divide-y divide-slate-700/50">
-            <tr><td colspan="5" class="p-4 text-center text-slate-500">Memuat leaderboard...</td></tr>
+            <tr><td colspan="6" class="p-4 text-center text-slate-500">Memuat leaderboard...</td></tr>
           </tbody>
         </table>
       </div>
@@ -415,7 +420,7 @@
   <!-- SCRIPT LOGIC FIREBASE & APLIKASI -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, doc, setDoc, getDoc, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getFirestore, doc, setDoc, getDoc, collection, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBD53DUan3_58TxIOK3pFsAWFay07mdLZ",
@@ -496,7 +501,7 @@
           previewWrap.addEventListener('click', () => openImageModal(fotoUrl, lkm.title));
         }
 
-        // UPLOAD DENGAN KOMPRESI GAMBAR OTOMATIS
+        // UPLOAD DENGAN KOMPRESI GAMBAR OTOMATIS & SERVER TIMESTAMP
         fileInput.addEventListener('change', async (e) => {
           const file = e.target.files[0];
           if (!file) return;
@@ -518,7 +523,6 @@
             const img = new Image();
             img.src = event.target.result;
             img.onload = async function() {
-              // Resize & Kompresi via HTML5 Canvas
               const canvas = document.createElement('canvas');
               const MAX_WIDTH = 800;
               const MAX_HEIGHT = 800;
@@ -542,7 +546,6 @@
               const ctx = canvas.getContext('2d');
               ctx.drawImage(img, 0, 0, width, height);
 
-              // Konversi ke format JPEG dengan kompresi 0.6 (60%)
               const base64String = canvas.toDataURL('image/jpeg', 0.6);
               const docId = getDocId(nama, kelas);
 
@@ -550,6 +553,7 @@
               currentSiswaData.kelas = kelas;
               currentSiswaData[`${lkm.id}_foto`] = base64String;
               currentSiswaData[`${lkm.id}_nilai`] = 100;
+              currentSiswaData.lastUpdated = serverTimestamp(); // Mencatat timestamp waktu kirim
 
               try {
                 await setDoc(doc(db, "siswa_lkm", docId), currentSiswaData, { merge: true });
@@ -627,6 +631,22 @@
             }
           }
 
+          // Format waktu pengiriman terakhir dari Firestore Timestamp
+          let timeMs = 0;
+          let formattedTime = '-';
+          if (data.lastUpdated) {
+            if (data.lastUpdated.toMillis) {
+              timeMs = data.lastUpdated.toMillis();
+            } else if (data.lastUpdated.seconds) {
+              timeMs = data.lastUpdated.seconds * 1000;
+            }
+            if (timeMs > 0) {
+              formattedTime = new Date(timeMs).toLocaleString('id-ID', {
+                day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit'
+              });
+            }
+          }
+
           list.push({
             idDoc: docSnap.id,
             nama: extractedName,
@@ -636,11 +656,26 @@
             sumatif: data.sumatif !== undefined ? data.sumatif : '-',
             kehadiran: data.kehadiran || 95,
             sikap: data.sikap !== undefined ? data.sikap : 'Sangat Baik',
+            lastUpdatedMs: timeMs,
+            formattedTime: formattedTime,
             dataFull: data
           });
         });
 
-        list.sort((a, b) => b.tuntas - a.tuntas || b.rataFormatif - a.rataFormatif);
+        // ATURAN URUTAN LEADERBOARD:
+        // 1. Jumlah LKM Tuntas terbanyak (descending)
+        // 2. Jika tuntas sama, Rata-Rata Formatif tertinggi (descending)
+        // 3. Jika tuntas & nilai sama, SISWA YANG DULUAN MENGIRIM BERADA DI ATAS (ascending timestamp)
+        list.sort((a, b) => {
+          if (b.tuntas !== a.tuntas) return b.tuntas - a.tuntas;
+          if (b.rataFormatif !== a.rataFormatif) return b.rataFormatif - a.rataFormatif;
+          if (a.lastUpdatedMs !== b.lastUpdatedMs) {
+            if (a.lastUpdatedMs === 0) return 1;
+            if (b.lastUpdatedMs === 0) return -1;
+            return a.lastUpdatedMs - b.lastUpdatedMs; // Waktu lebih kecil/awal naik ke atas
+          }
+          return 0;
+        });
 
         globalRawSiswaData = list;
         renderTabelRaport();
@@ -655,7 +690,7 @@
       tbody.innerHTML = '';
 
       if (list.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="5" class="p-4 text-center text-slate-500">Belum ada data siswa yang terekam.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="6" class="p-4 text-center text-slate-500">Belum ada data siswa yang terekam.</td></tr>';
         return;
       }
 
@@ -674,6 +709,7 @@
           <td class="p-3"><span class="bg-slate-700/60 px-2 py-0.5 rounded text-[10px] text-slate-300">${item.kelas}</span></td>
           <td class="p-3 text-center"><span class="font-bold text-emerald-400">${item.tuntas}</span> / 6</td>
           <td class="p-3 text-center"><span class="font-bold text-indigo-400">${item.rataFormatif}</span></td>
+          <td class="p-3 text-center text-[11px] text-slate-400">${item.formattedTime}</td>
         `;
         tbody.appendChild(tr);
       });
@@ -989,7 +1025,8 @@
         "Rata-Rata Formatif": item.rataFormatif,
         "Kehadiran (%)": item.kehadiran,
         "Sikap": item.sikap,
-        "Total LKM Tuntas": item.tuntas
+        "Total LKM Tuntas": item.tuntas,
+        "Waktu Kirim Terakhir": item.formattedTime
       }));
 
       const worksheet = XLSX.utils.json_to_sheet(dataToExport);
