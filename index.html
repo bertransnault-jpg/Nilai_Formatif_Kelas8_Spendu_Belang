@@ -95,7 +95,7 @@
           <div class="bg-slate-800/60 border border-slate-700 p-4 rounded-2xl flex items-center justify-between">
             <div>
               <p class="text-xs text-slate-400 font-medium">LKM Tuntas</p>
-              <h3 id="statTuntas" class="text-2xl font-black text-emerald-400 mt-1">0 / 6</h3>
+              <h3 id="statTuntas" class="text-2xl font-black text-emerald-400 mt-1">0 / 7</h3>
             </div>
             <div class="w-12 h-12 bg-emerald-500/10 border border-emerald-500/20 rounded-xl flex items-center justify-center text-emerald-400 text-xl">
               <i class="fa-solid fa-circle-check"></i>
@@ -199,7 +199,7 @@
     <!-- KARTU LKM -->
     <section class="no-print">
       <h2 class="text-xs sm:text-sm font-bold text-slate-300 mb-4 uppercase tracking-wider flex items-center gap-2">
-        <i class="fa-solid fa-layer-group text-indigo-400"></i> Lembar Kerja Murid (LKM 2 - 7)
+        <i class="fa-solid fa-layer-group text-indigo-400"></i> Lembar Kerja Murid (LKM 2 - 8)
       </h2>
       <div id="lkmContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
     </section>
@@ -392,12 +392,13 @@
           <th class="border border-black p-2 w-8">No</th>
           <th class="border border-black p-2 text-left">Nama Lengkap Siswa</th>
           <th class="border border-black p-2 w-16">Kelas</th>
-          <th class="border border-black p-2 w-16">LKM 2</th>
-          <th class="border border-black p-2 w-16">LKM 3</th>
-          <th class="border border-black p-2 w-16">LKM 4</th>
-          <th class="border border-black p-2 w-16">LKM 5</th>
-          <th class="border border-black p-2 w-16">LKM 6</th>
-          <th class="border border-black p-2 w-16">LKM 7</th>
+          <th class="border border-black p-2 w-14">LKM 2</th>
+          <th class="border border-black p-2 w-14">LKM 3</th>
+          <th class="border border-black p-2 w-14">LKM 4</th>
+          <th class="border border-black p-2 w-14">LKM 5</th>
+          <th class="border border-black p-2 w-14">LKM 6</th>
+          <th class="border border-black p-2 w-14">LKM 7</th>
+          <th class="border border-black p-2 w-14">LKM 8</th>
           <th class="border border-black p-2 w-20">Total Tuntas</th>
         </tr>
       </thead>
@@ -434,13 +435,15 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
+    // DAFTAR LKM TERBARU (LKM 2 - LKM 8, LKM 7 SISTEM EKSKRESI)
     const lkmList = [
       { id: 'lkm2', title: 'LKM 2: Gizi Seimbang & Isi Piringku', topik: 'Sistem Pencernaan & Zat Aditif' },
       { id: 'lkm3', title: 'LKM 3: Organ & Enzim Pencernaan', topik: 'Enzim & Saluran Cerna' },
       { id: 'lkm4', title: 'LKM 4: Pernapasan & Bahaya Rokok', topik: 'Sistem Pernapasan Manusia' },
       { id: 'lkm5', title: 'LKM 5: Peredaran Darah & Plasma', topik: 'Sistem Peredaran Darah' },
       { id: 'lkm6', title: 'LKM 6: Script Video Anti-Rokok', topik: 'Kampanye Kesehatan & Biotek' },
-      { id: 'lkm7', title: 'LKM 7: Jurnal Refleksi Diri', topik: 'Sistem Ekskresi & Urine' }
+      { id: 'lkm7', title: 'LKM 7: Sistem Ekskresi', topik: 'Sistem Ekskresi Manusia' },
+      { id: 'lkm8', title: 'LKM 8: Jurnal Refleksi Diri', topik: 'Evaluasi Belajar & Self Reflection' }
     ];
 
     let currentSiswaData = { nama: '', kelas: 'VIII-A' };
@@ -501,7 +504,6 @@
           previewWrap.addEventListener('click', () => openImageModal(fotoUrl, lkm.title));
         }
 
-        // UPLOAD DENGAN KOMPRESI GAMBAR OTOMATIS & SERVER TIMESTAMP
         fileInput.addEventListener('change', async (e) => {
           const file = e.target.files[0];
           if (!file) return;
@@ -553,7 +555,7 @@
               currentSiswaData.kelas = kelas;
               currentSiswaData[`${lkm.id}_foto`] = base64String;
               currentSiswaData[`${lkm.id}_nilai`] = 100;
-              currentSiswaData.lastUpdated = serverTimestamp(); // Mencatat timestamp waktu kirim
+              currentSiswaData.lastUpdated = serverTimestamp();
 
               try {
                 await setDoc(doc(db, "siswa_lkm", docId), currentSiswaData, { merge: true });
@@ -561,7 +563,7 @@
                 renderLkmCards();
               } catch (err) {
                 console.error("Gagal menyimpan ke Firestore:", err);
-                alert("Gagal mengunggah gambar. Pastikan aturan database Firestore mengizinkan penulisan.");
+                alert("Gagal mengunggah gambar. Periksa konsol browser atau koneksi.");
                 uploadBtn.disabled = false;
                 uploadBtn.innerHTML = `<i class="fa-solid fa-camera"></i> Coba Lagi`;
               }
@@ -631,7 +633,6 @@
             }
           }
 
-          // Format waktu pengiriman terakhir dari Firestore Timestamp
           let timeMs = 0;
           let formattedTime = '-';
           if (data.lastUpdated) {
@@ -653,387 +654,4 @@
             kelas: extractedKelas || 'VIII-A',
             tuntas: count,
             rataFormatif: count > 0 ? Math.round(totalFormatif / lkmList.length) : 0,
-            sumatif: data.sumatif !== undefined ? data.sumatif : '-',
-            kehadiran: data.kehadiran || 95,
-            sikap: data.sikap !== undefined ? data.sikap : 'Sangat Baik',
-            lastUpdatedMs: timeMs,
-            formattedTime: formattedTime,
-            dataFull: data
-          });
-        });
-
-        // ATURAN URUTAN LEADERBOARD:
-        // 1. Jumlah LKM Tuntas terbanyak (descending)
-        // 2. Jika tuntas sama, Rata-Rata Formatif tertinggi (descending)
-        // 3. Jika tuntas & nilai sama, SISWA YANG DULUAN MENGIRIM BERADA DI ATAS (ascending timestamp)
-        list.sort((a, b) => {
-          if (b.tuntas !== a.tuntas) return b.tuntas - a.tuntas;
-          if (b.rataFormatif !== a.rataFormatif) return b.rataFormatif - a.rataFormatif;
-          if (a.lastUpdatedMs !== b.lastUpdatedMs) {
-            if (a.lastUpdatedMs === 0) return 1;
-            if (b.lastUpdatedMs === 0) return -1;
-            return a.lastUpdatedMs - b.lastUpdatedMs; // Waktu lebih kecil/awal naik ke atas
-          }
-          return 0;
-        });
-
-        globalRawSiswaData = list;
-        renderTabelRaport();
-        renderLeaderboardUI(list);
-        renderPrintTableGuru(list);
-        updateLiveGallery();
-      });
-    }
-
-    function renderLeaderboardUI(list) {
-      const tbody = document.getElementById('leaderboardBody');
-      tbody.innerHTML = '';
-
-      if (list.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="6" class="p-4 text-center text-slate-500">Belum ada data siswa yang terekam.</td></tr>';
-        return;
-      }
-
-      list.forEach((item, index) => {
-        let badge = '';
-        if (index === 0) badge = '<span class="bg-amber-500 text-slate-950 font-bold px-2 py-0.5 rounded text-[10px]">#1 🥇</span>';
-        else if (index === 1) badge = '<span class="bg-slate-300 text-slate-950 font-bold px-2 py-0.5 rounded text-[10px]">#2 🥈</span>';
-        else if (index === 2) badge = '<span class="bg-amber-700 text-white font-bold px-2 py-0.5 rounded text-[10px]">#3 🥉</span>';
-        else badge = `<span class="text-slate-400 font-bold">#${index + 1}</span>`;
-
-        const tr = document.createElement('tr');
-        tr.className = "hover:bg-slate-700/30 transition";
-        tr.innerHTML = `
-          <td class="p-3">${badge}</td>
-          <td class="p-3 font-semibold text-white">${item.nama}</td>
-          <td class="p-3"><span class="bg-slate-700/60 px-2 py-0.5 rounded text-[10px] text-slate-300">${item.kelas}</span></td>
-          <td class="p-3 text-center"><span class="font-bold text-emerald-400">${item.tuntas}</span> / 6</td>
-          <td class="p-3 text-center"><span class="font-bold text-indigo-400">${item.rataFormatif}</span></td>
-          <td class="p-3 text-center text-[11px] text-slate-400">${item.formattedTime}</td>
-        `;
-        tbody.appendChild(tr);
-      });
-    }
-
-    window.renderTabelRaport = function() {
-      const filterKelas = document.getElementById('filterKelasRaport').value;
-      const tbody = document.getElementById('tabelRaportBody');
-      tbody.innerHTML = '';
-
-      const filtered = globalRawSiswaData.filter(item => filterKelas === 'ALL' || item.kelas === filterKelas);
-
-      if (filtered.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="9" class="p-4 text-center text-slate-500">Tidak ada data siswa pada kelas ini.</td></tr>';
-        return;
-      }
-
-      filtered.forEach((item, idx) => {
-        const sumatifVal = item.sumatif === '-' ? 0 : Number(item.sumatif);
-        const formatifVal = item.rataFormatif;
-        const nilaiAkhir = sumatifVal > 0 ? Math.round((sumatifVal * 0.6) + (formatifVal * 0.4)) : formatifVal;
-
-        const tr = document.createElement('tr');
-        tr.className = "hover:bg-slate-700/30 text-center transition";
-        tr.innerHTML = `
-          <td class="p-3">${idx + 1}</td>
-          <td class="p-3 text-left font-semibold text-white">${item.nama}</td>
-          <td class="p-3">${item.kelas}</td>
-          <td class="p-3 text-amber-400 font-bold">${item.sumatif}</td>
-          <td class="p-3 text-indigo-400 font-bold">${item.rataFormatif}</td>
-          <td class="p-3">${item.kehadiran}%</td>
-          <td class="p-3 text-emerald-400">${item.sikap}</td>
-          <td class="p-3 text-white font-black">${nilaiAkhir}</td>
-          <td class="p-3 text-left">
-            <button onclick='cetakRaportResmi(${JSON.stringify(item)})' class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-2.5 py-1.5 rounded-lg text-[10px] transition">
-              <i class="fa-solid fa-print"></i> Cetak Raport
-            </button>
-          </td>
-        `;
-        tbody.appendChild(tr);
-      });
-    };
-
-    function renderPrintTableGuru(list) {
-      const tbody = document.getElementById('printTableBodyGuru');
-      tbody.innerHTML = '';
-
-      list.forEach((item, idx) => {
-        const tr = document.createElement('tr');
-        tr.className = "text-center";
-        let cols = '';
-        lkmList.forEach(lkm => {
-          const tuntas = (item.dataFull[`${lkm.id}_nilai`] || 0) === 100;
-          cols += `<td class="border border-black p-1">${tuntas ? '✔' : '-'}</td>`;
-        });
-
-        tr.innerHTML = `
-          <td class="border border-black p-1">${idx + 1}</td>
-          <td class="border border-black p-1 text-left font-semibold">${item.nama}</td>
-          <td class="border border-black p-1">${item.kelas}</td>
-          ${cols}
-          <td class="border border-black p-1 font-bold">${item.tuntas} / 6</td>
-        `;
-        tbody.appendChild(tr);
-      });
-    }
-
-    function updateStats() {
-      let tuntasCount = 0;
-      let totalNilai = 0;
-      let completedCount = 0;
-
-      lkmList.forEach(lkm => {
-        const val = currentSiswaData[`${lkm.id}_nilai`] || 0;
-        if (val === 100) {
-          tuntasCount++;
-          totalNilai += val;
-          completedCount++;
-        }
-      });
-
-      const rata = completedCount > 0 ? Math.round(totalNilai / lkmList.length) : 0;
-      const percent = Math.round((tuntasCount / lkmList.length) * 100);
-
-      document.getElementById('statTuntas').innerText = `${tuntasCount} / 6`;
-      document.getElementById('statRataRata').innerText = rata;
-      document.getElementById('progressPercent').innerText = `${percent}%`;
-      document.getElementById('progressBar').style.width = `${percent}%`;
-
-      const statusEl = document.getElementById('statStatus');
-      if (tuntasCount === 6) {
-        statusEl.innerText = 'Sangat Baik (Tuntas)';
-        statusEl.className = 'text-sm font-bold text-emerald-400 mt-1';
-      } else if (tuntasCount > 0) {
-        statusEl.innerText = 'Dalam Proses';
-        statusEl.className = 'text-sm font-bold text-indigo-400 mt-1';
-      } else {
-        statusEl.innerText = 'Belum Ada Data';
-        statusEl.className = 'text-sm font-bold text-amber-400 mt-1';
-      }
-
-      const pendingList = document.getElementById('pendingLkmList');
-      pendingList.innerHTML = '';
-      let hasPending = false;
-
-      lkmList.forEach(lkm => {
-        const val = currentSiswaData[`${lkm.id}_nilai`] || 0;
-        if (val !== 100) {
-          hasPending = true;
-          const li = document.createElement('li');
-          li.className = "flex items-center gap-2 text-slate-400";
-          li.innerHTML = `<i class="fa-solid fa-circle-xmark text-amber-500"></i> ${lkm.title}`;
-          pendingList.appendChild(li);
-        }
-      });
-
-      if (!hasPending) {
-        pendingList.innerHTML = '<li class="text-emerald-400 font-semibold"><i class="fa-solid fa-circle-check"></i> Semua LKM telah tuntas!</li>';
-      }
-    }
-
-    function updateLiveGallery() {
-      const gallery = document.getElementById('liveImageGallery');
-      gallery.innerHTML = '';
-
-      let images = [];
-      globalRawSiswaData.forEach(item => {
-        lkmList.forEach(lkm => {
-          if (item.dataFull && item.dataFull[`${lkm.id}_foto`]) {
-            images.push({
-              title: `${item.nama} - ${lkm.id.toUpperCase()}`,
-              url: item.dataFull[`${lkm.id}_foto`]
-            });
-          }
-        });
-      });
-
-      if (currentSiswaData) {
-        lkmList.forEach(lkm => {
-          if (currentSiswaData[`${lkm.id}_foto`]) {
-            const exists = images.some(img => img.url === currentSiswaData[`${lkm.id}_foto`]);
-            if (!exists) {
-              images.push({
-                title: `${currentSiswaData.nama || 'Siswa'} - ${lkm.id.toUpperCase()}`,
-                url: currentSiswaData[`${lkm.id}_foto`]
-              });
-            }
-          }
-        });
-      }
-
-      if (images.length === 0) {
-        gallery.innerHTML = '<p class="text-xs text-slate-500 italic col-span-full text-center py-4">Belum ada foto TTD atau tugas yang diunggah.</p>';
-        return;
-      }
-
-      images.forEach(img => {
-        const div = document.createElement('div');
-        div.className = "bg-slate-900 border border-slate-700 rounded-xl p-2 cursor-pointer group overflow-hidden shadow";
-        div.innerHTML = `
-          <div class="h-24 overflow-hidden rounded-lg mb-1.5 bg-slate-950 flex items-center justify-center">
-            <img src="${img.url}" class="h-full object-cover group-hover:scale-110 transition" />
-          </div>
-          <p class="text-[10px] text-slate-300 font-medium truncate text-center">${img.title}</p>
-        `;
-        div.addEventListener('click', () => openImageModal(img.url, img.title));
-        gallery.appendChild(div);
-      });
-    }
-
-    function openImageModal(url, title) {
-      document.getElementById('modalImageElement').src = url;
-      document.getElementById('modalImageTitle').innerText = title;
-      document.getElementById('imageModal').classList.remove('hidden');
-    }
-
-    window.closeImageModal = function() {
-      document.getElementById('imageModal').classList.add('hidden');
-    };
-
-    window.bukaModalInputGuru = function() {
-      document.getElementById('modalInputGuru').classList.remove('hidden');
-    };
-
-    window.tutupModalInputGuru = function() {
-      document.getElementById('modalInputGuru').classList.add('hidden');
-    };
-
-    window.simpanInputGuru = async function() {
-      const nama = document.getElementById('inputGuruNama').value.trim();
-      const kelas = document.getElementById('inputGuruKelas').value;
-      const sumatif = document.getElementById('inputGuruSumatif').value;
-      const hadir = document.getElementById('inputGuruHadir').value;
-
-      if (!nama) { alert("Nama siswa wajib diisi!"); return; }
-
-      const docId = getDocId(nama, kelas);
-      let payload = { nama, kelas };
-
-      if (sumatif !== '') payload.sumatif = Number(sumatif);
-      if (hadir !== '') payload.kehadiran = Number(hadir);
-
-      try {
-        await setDoc(doc(db, "siswa_lkm", docId), payload, { merge: true });
-        alert(`Berhasil memperbarui nilai sumatif & kehadiran untuk ${nama}!`);
-        tutupModalInputGuru();
-      } catch (err) {
-        console.error("Gagal menyimpan:", err);
-        alert("Gagal menyimpan data ke Cloud.");
-      }
-    };
-
-    window.prosesExcelKehadiran = function(event) {
-      const file = event.target.files[0];
-      if (!file) return;
-
-      const reader = new FileReader();
-      reader.onload = async function(e) {
-        const data = new Uint8Array(e.target.result);
-        const workbook = XLSX.read(data, { type: 'array' });
-        const firstSheetName = workbook.SheetNames[0];
-        const worksheet = workbook.Sheets[firstSheetName];
-        const json = XLSX.utils.sheet_to_json(worksheet);
-
-        let countUpdated = 0;
-        for (let row of json) {
-          const nama = row['Nama'] || row['nama'] || row['Nama Siswa'];
-          const kelas = row['Kelas'] || row['kelas'] || 'VIII-A';
-          const hadir = row['Kehadiran'] || row['kehadiran'] || row['Absen'];
-
-          if (nama && hadir !== undefined) {
-            const docId = getDocId(nama, kelas);
-            await setDoc(doc(db, "siswa_lkm", docId), { nama, kelas, kehadiran: Number(hadir) }, { merge: true });
-            countUpdated++;
-          }
-        }
-        alert(`Berhasil memproses ${countUpdated} data kehadiran dari Excel!`);
-        event.target.value = '';
-      };
-      reader.readAsArrayBuffer(file);
-    };
-
-    window.cetakLaporanSiswa = function() {
-      const nama = document.getElementById('inputNama').value.trim();
-      const kelas = document.getElementById('inputKelas').value;
-
-      if (!nama) { alert("Masukkan Nama Murid terlebih dahulu!"); return; }
-
-      document.getElementById('printNama').innerText = nama;
-      document.getElementById('printKelas').innerText = kelas;
-
-      const tbody = document.getElementById('printTableBody');
-      tbody.innerHTML = '';
-
-      lkmList.forEach((lkm) => {
-        const nilai = currentSiswaData[`${lkm.id}_nilai`] || 0;
-        const status = nilai === 100 ? 'Tuntas & Terverifikasi' : 'Belum Selesai';
-
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td class="border border-black p-2 text-center font-bold">${lkm.id.toUpperCase()}</td>
-          <td class="border border-black p-2">${lkm.title}</td>
-          <td class="border border-black p-2 text-center font-bold">${nilai > 0 ? nilai : '-'}</td>
-          <td class="border border-black p-2 text-center">${status}</td>
-        `;
-        tbody.appendChild(tr);
-      });
-
-      document.body.className = "bg-slate-900 text-slate-100 font-sans min-h-screen mode-print-siswa";
-      window.print();
-      document.body.className = "bg-slate-900 text-slate-100 font-sans min-h-screen";
-    };
-
-    window.cetakLaporanGuru = function() {
-      document.body.className = "bg-slate-900 text-slate-100 font-sans min-h-screen mode-print-guru";
-      window.print();
-      document.body.className = "bg-slate-900 text-slate-100 font-sans min-h-screen";
-    };
-
-    window.cetakRaportResmi = function(item) {
-      document.getElementById('raportPrintNama').innerText = item.nama;
-      document.getElementById('raportPrintKelas').innerText = item.kelas;
-      
-      const sumatifVal = item.sumatif === '-' ? 0 : Number(item.sumatif);
-      const formatifVal = item.rataFormatif;
-      const nilaiAkhir = sumatifVal > 0 ? Math.round((sumatifVal * 0.6) + (formatifVal * 0.4)) : formatifVal;
-
-      document.getElementById('raportCellNilaiAkhir').innerText = nilaiAkhir;
-      document.getElementById('raportCellHadir').innerText = `${item.kehadiran}%`;
-      document.getElementById('raportCellSikap').innerText = item.sikap;
-
-      const options = { year: 'numeric', month: 'long', day: 'numeric' };
-      document.getElementById('tanggalCetakRaport').innerText = new Date().toLocaleDateString('id-ID', options);
-
-      document.getElementById('raportCellDeskripsi').innerText = `Peserta didik menunjukkan penguasaan yang sangat baik dalam memahami konsep Ilmu Pengetahuan Alam (IPA) Fase D terutama pada materi Sistem Pencernaan, Pernapasan, Peredaran Darah, hingga Ekskresi, serta aktif menyelesaikan seluruh penugasan lembar kerja murid (LKM) dan menunjukkan kedisiplinan kehadiran serta sikap yang positif.`;
-
-      document.body.className = "bg-slate-900 text-slate-100 font-sans min-h-screen mode-print-raport";
-      window.print();
-      document.body.className = "bg-slate-900 text-slate-100 font-sans min-h-screen";
-    };
-
-    window.eksporExcel = function() {
-      if (globalRawSiswaData.length === 0) {
-        alert("Tidak ada data untuk diekspor!");
-        return;
-      }
-
-      let dataToExport = globalRawSiswaData.map((item, idx) => ({
-        No: idx + 1,
-        Nama: item.nama,
-        Kelas: item.kelas,
-        "Nilai Sumatif": item.sumatif,
-        "Rata-Rata Formatif": item.rataFormatif,
-        "Kehadiran (%)": item.kehadiran,
-        "Sikap": item.sikap,
-        "Total LKM Tuntas": item.tuntas,
-        "Waktu Kirim Terakhir": item.formattedTime
-      }));
-
-      const worksheet = XLSX.utils.json_to_sheet(dataToExport);
-      const workbook = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(workbook, worksheet, "Rekap Nilai IPA");
-      XLSX.writeFile(workbook, "Rekap_Nilai_IPA_SMPN2Belang.xlsx");
-    };
-  </script>
-</body>
-</html>
+            sumatif: data
