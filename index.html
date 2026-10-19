@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Aplikasi LKM & Raport IPA - SMP Negeri 2 Belang</title>
   
-  <!-- CDN Tailwind CSS & FontAwesome -->
+  <!-- CSS Library -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -148,7 +148,7 @@
       </div>
     </section>
 
-    <!-- TOOLS NILAI RAPORT & UPLOAD EXCEL -->
+    <!-- TOOLS NILAI RAPORT -->
     <section class="bg-slate-800 border border-slate-700 rounded-2xl p-5 no-print shadow space-y-4">
       <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-700 pb-4">
         <div>
@@ -451,7 +451,7 @@
     </div>
   </div>
 
-  <!-- SCRIPT LOGIKA APLIKASI -->
+  <!-- SCRIPT UTAMA SAFE-RENDER -->
   <script>
     // Config Firebase
     const firebaseConfig = {
@@ -463,12 +463,17 @@
       appId: "1:754730321834:web:71dc0230831140b2aa4d"
     };
 
+    let db = null;
     try {
-      firebase.initializeApp(firebaseConfig);
+      if (typeof firebase !== 'undefined') {
+        if (!firebase.apps.length) {
+          firebase.initializeApp(firebaseConfig);
+        }
+        db = firebase.firestore();
+      }
     } catch(e) {
-      console.log("Firebase initialized");
+      console.error("Firebase init error:", e);
     }
-    const db = firebase.firestore();
 
     const lkmList = [
       { id: 'lkm2', title: 'LKM 2: Gizi Seimbang & Isi Piringku', topik: 'Sistem Pencernaan & Zat Aditif' },
@@ -489,9 +494,13 @@
     let currentPageLeaderboard = 1;
     const itemsPerPageLeaderboard = 10;
 
-    window.addEventListener('DOMContentLoaded', () => {
-      renderLkmCards();
-      initListener();
+    document.addEventListener('DOMContentLoaded', () => {
+      try {
+        renderLkmCards();
+        initListener();
+      } catch (err) {
+        console.error("Initialization error:", err);
+      }
     });
 
     function getDocId(nama, kelas) {
@@ -539,75 +548,88 @@
         const uploadBtn = card.querySelector(`#btn_upload_${lkm.id}`);
         const previewWrap = card.querySelector(`#preview_wrap_${lkm.id}`);
 
-        uploadBtn.addEventListener('click', () => fileInput.click());
+        if (uploadBtn && fileInput) {
+          uploadBtn.addEventListener('click', () => fileInput.click());
+        }
         
-        if (fotoUrl) {
+        if (fotoUrl && previewWrap) {
           previewWrap.addEventListener('click', () => openImageModal(fotoUrl, lkm.title));
         }
 
-        fileInput.addEventListener('change', async (e) => {
-          const file = e.target.files[0];
-          if (!file) return;
+        if (fileInput) {
+          fileInput.addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
 
-          const namaInput = document.getElementById('inputNama');
-          const kelasInput = document.getElementById('inputKelas');
-          const nama = namaInput ? namaInput.value.trim() : '';
-          const kelas = kelasInput ? kelasInput.value : 'VIII-A';
+            const namaInput = document.getElementById('inputNama');
+            const kelasInput = document.getElementById('inputKelas');
+            const nama = namaInput ? namaInput.value.trim() : '';
+            const kelas = kelasInput ? kelasInput.value : 'VIII-A';
 
-          if (!nama) {
-            alert("Harap isi Nama Lengkap Murid terlebih dahulu!");
-            fileInput.value = '';
-            return;
-          }
+            if (!nama) {
+              alert("Harap isi Nama Lengkap Murid terlebih dahulu!");
+              fileInput.value = '';
+              return;
+            }
 
-          uploadBtn.disabled = true;
-          uploadBtn.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i> Mengompres...`;
+            if (uploadBtn) {
+              uploadBtn.disabled = true;
+              uploadBtn.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i> Mengompres...`;
+            }
 
-          const reader = new FileReader();
-          reader.onload = function(event) {
-            const img = new Image();
-            img.src = event.target.result;
-            img.onload = async function() {
-              const canvas = document.createElement('canvas');
-              const MAX_WIDTH = 800;
-              const MAX_HEIGHT = 800;
-              let width = img.width;
-              let height = img.height;
+            const reader = new FileReader();
+            reader.onload = function(event) {
+              const img = new Image();
+              img.src = event.target.result;
+              img.onload = async function() {
+                const canvas = document.createElement('canvas');
+                const MAX_WIDTH = 800;
+                const MAX_HEIGHT = 800;
+                let width = img.width;
+                let height = img.height;
 
-              if (width > height) {
-                if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; }
-              } else {
-                if (height > MAX_HEIGHT) { width *= MAX_HEIGHT / height; height = MAX_HEIGHT; }
-              }
+                if (width > height) {
+                  if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; }
+                } else {
+                  if (height > MAX_HEIGHT) { width *= MAX_HEIGHT / height; height = MAX_HEIGHT; }
+                }
 
-              canvas.width = width;
-              canvas.height = height;
-              const ctx = canvas.getContext('2d');
-              ctx.drawImage(img, 0, 0, width, height);
+                canvas.width = width;
+                canvas.height = height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, width, height);
 
-              const base64String = canvas.toDataURL('image/jpeg', 0.6);
-              const docId = getDocId(nama, kelas);
+                const base64String = canvas.toDataURL('image/jpeg', 0.6);
+                const docId = getDocId(nama, kelas);
 
-              currentSiswaData.nama = nama;
-              currentSiswaData.kelas = kelas;
-              currentSiswaData[`${lkm.id}_foto`] = base64String;
-              currentSiswaData[`${lkm.id}_nilai`] = 100;
-              currentSiswaData.lastUpdated = firebase.firestore.FieldValue.serverTimestamp();
+                currentSiswaData.nama = nama;
+                currentSiswaData.kelas = kelas;
+                currentSiswaData[`${lkm.id}_foto`] = base64String;
+                currentSiswaData[`${lkm.id}_nilai`] = 100;
+                
+                if (typeof firebase !== 'undefined' && firebase.firestore) {
+                  currentSiswaData.lastUpdated = firebase.firestore.FieldValue.serverTimestamp();
+                }
 
-              try {
-                await db.collection("siswa_lkm").doc(docId).set(currentSiswaData, { merge: true });
-                alert(`Berhasil menyimpan ${lkm.id} untuk ${nama}!`);
-                renderLkmCards();
-              } catch (err) {
-                console.error("Gagal menyimpan:", err);
-                alert("Gagal mengunggah gambar.");
-                uploadBtn.disabled = false;
-                uploadBtn.innerHTML = `<i class="fa-solid fa-camera"></i> Coba Lagi`;
-              }
+                try {
+                  if (db) {
+                    await db.collection("siswa_lkm").doc(docId).set(currentSiswaData, { merge: true });
+                  }
+                  alert(`Berhasil menyimpan ${lkm.id} untuk ${nama}!`);
+                  renderLkmCards();
+                } catch (err) {
+                  console.error("Gagal menyimpan:", err);
+                  alert("Gagal mengunggah gambar.");
+                  if (uploadBtn) {
+                    uploadBtn.disabled = false;
+                    uploadBtn.innerHTML = `<i class="fa-solid fa-camera"></i> Coba Lagi`;
+                  }
+                }
+              };
             };
-          };
-          reader.readAsDataURL(file);
-        });
+            reader.readAsDataURL(file);
+          });
+        }
       });
 
       updateStats();
@@ -625,6 +647,7 @@
       const docId = getDocId(nama, kelas);
 
       try {
+        if (!db) throw new Error("Database tidak terhubung");
         const docSnap = await db.collection("siswa_lkm").doc(docId).get();
 
         if (docSnap.exists) {
@@ -643,6 +666,7 @@
     };
 
     function initListener() {
+      if (!db) return;
       db.collection("siswa_lkm").onSnapshot((snapshot) => {
         let list = [];
         snapshot.forEach(docSnap => {
@@ -664,10 +688,6 @@
 
         globalRawSiswaData = list;
         
-        // Sorting Leaderboard:
-        // 1. Tuntas LKM terbanyak
-        // 2. Formatif tertinggi
-        // 3. Waktu Kirim paling dulu
         list.sort((a, b) => {
           if (b.tuntasCount !== a.tuntasCount) return b.tuntasCount - a.tuntasCount;
           if (b.avgFormatif !== a.avgFormatif) return b.avgFormatif - a.avgFormatif;
@@ -923,7 +943,6 @@
       });
     }
 
-    // Helper functions
     function setElemText(id, text) {
       const el = document.getElementById(id);
       if (el) el.innerText = text;
@@ -972,13 +991,19 @@
       if (!nama) { alert("Nama siswa wajib diisi!"); return; }
 
       const docId = getDocId(nama, kelas);
-      let payload = { nama, kelas, lastUpdated: firebase.firestore.FieldValue.serverTimestamp() };
+      let payload = { nama, kelas };
+
+      if (typeof firebase !== 'undefined' && firebase.firestore) {
+        payload.lastUpdated = firebase.firestore.FieldValue.serverTimestamp();
+      }
 
       if (sumatifVal !== "") payload.sumatif = parseFloat(sumatifVal);
       if (hadirVal !== "") payload.kehadiran = parseFloat(hadirVal);
 
       try {
-        await db.collection("siswa_lkm").doc(docId).set(payload, { merge: true });
+        if (db) {
+          await db.collection("siswa_lkm").doc(docId).set(payload, { merge: true });
+        }
         alert(`Berhasil menyimpan nilai untuk ${nama}!`);
         tutupModalInputGuru();
       } catch (err) {
@@ -1105,12 +1130,14 @@
       if (!file) return;
       const reader = new FileReader();
       reader.onload = function(e) {
-        const data = new Uint8Array(e.target.result);
-        const workbook = XLSX.read(data, { type: 'array' });
-        const firstSheetName = workbook.SheetNames[0];
-        const worksheet = workbook.Sheets[firstSheetName];
-        const json = XLSX.utils.sheet_to_json(worksheet);
-        alert(`Berhasil membaca ${json.length} baris dari file Excel absensi.`);
+        if (typeof XLSX !== 'undefined') {
+          const data = new Uint8Array(e.target.result);
+          const workbook = XLSX.read(data, { type: 'array' });
+          const firstSheetName = workbook.SheetNames[0];
+          const worksheet = workbook.Sheets[firstSheetName];
+          const json = XLSX.utils.sheet_to_json(worksheet);
+          alert(`Berhasil membaca ${json.length} baris dari file Excel absensi.`);
+        }
       };
       reader.readAsArrayBuffer(file);
     }
