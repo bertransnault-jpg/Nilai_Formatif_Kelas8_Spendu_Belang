@@ -62,8 +62,7 @@
         </div>
       </div>
       <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
-        <button onclick="cetakLaporanSiswa()" class="btn btn-indigo"><i class="fa-solid fa-user"></i> Cetak Siswa</button>
-        <button onclick="cetakLaporanGuru()" class="btn btn-emerald"><i class="fa-solid fa-file-invoice"></i> Rekap Guru</button>
+        <button onclick="muatSemuaDataCloud()" class="btn btn-sky"><i class="fa-solid fa-rotate"></i> Refresh Data</button>
         <button onclick="eksporExcel()" class="btn btn-amber"><i class="fa-solid fa-file-excel"></i> Ekspor CSV</button>
       </div>
     </div>
@@ -145,19 +144,11 @@
     <section class="card no-print" style="margin-top:1.5rem;">
       <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; border-bottom:1px solid #334155; padding-bottom:1rem; margin-bottom:1rem;">
         <div>
-          <h2 style="font-size:0.875rem; font-weight:900; color:white; text-transform:uppercase;"><i class="fa-solid fa-award" style="color:#fbbf24;"></i> Tools Pengolahan Nilai Raport & Deskripsi KD</h2>
-          <p style="font-size:12px; color:#94a3b8;">Hitung otomatis formatif, absensi, dan deskripsi capaian raport.</p>
+          <h2 style="font-size:0.875rem; font-weight:900; color:white; text-transform:uppercase;"><i class="fa-solid fa-award" style="color:#fbbf24;"></i> Tools Pengolahan Nilai Raport & Leaderboard</h2>
+          <p style="font-size:12px; color:#94a3b8;">Daftar rekapitulasi nilai siswa dari Cloud Database.</p>
         </div>
-        <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
-          <select id="filterKelasRaport" onchange="gantiFilterRaport()" style="width:auto; padding:0.5rem;">
-            <option value="ALL">Semua Kelas</option>
-            <option value="VIII-A">Kelas VIII-A</option>
-            <option value="VIII-B">Kelas VIII-B</option>
-            <option value="VIII-C">Kelas VIII-C</option>
-          </select>
-          <input type="file" id="excelFileHadir" accept=".xlsx, .xls, .csv" class="hidden" onchange="prosesExcelKehadiran(event)">
-          <button onclick="document.getElementById('excelFileHadir').click()" class="btn btn-sky"><i class="fa-solid fa-file-excel"></i> Upload Absen Excel</button>
-          <button onclick="bukaModalInputGuru()" class="btn btn-emerald"><i class="fa-solid fa-pen-to-square"></i> Input Nilai Sumatif</button>
+        <div>
+          <button onclick="muatSemuaDataCloud()" class="btn btn-emerald"><i class="fa-solid fa-cloud"></i> Muat Semua Siswa</button>
         </div>
       </div>
 
@@ -169,79 +160,27 @@
               <th style="text-align:left;">Nama Siswa</th>
               <th>Kelas</th>
               <th>Nilai Sumatif</th>
-              <th>Nilai Formatif</th>
-              <th>Kehadiran (%)</th>
-              <th>Nilai Sikap</th>
-              <th>Nilai Akhir</th>
+              <th>Rata-Rata Formatif</th>
+              <th>LKM Tuntas</th>
               <th style="text-align:left;">Aksi</th>
             </tr>
           </thead>
           <tbody id="tabelRaportBody">
-            <tr><td colspan="9" style="text-align:center; color:#64748b; padding:1rem;">Memuat data...</td></tr>
+            <tr><td colspan="7" style="text-align:center; color:#64748b; padding:1rem;">Klik "Muat Semua Siswa" untuk menampilkan data...</td></tr>
           </tbody>
         </table>
       </div>
     </section>
 
-    <!-- KARTU LKM (DIJAMIN MUNCUL) -->
+    <!-- KARTU LKM -->
     <section class="no-print">
       <h2 class="card-title"><i class="fa-solid fa-layer-group" style="color:#818cf8;"></i> Lembar Kerja Murid (LKM 2 - 8)</h2>
       <div id="lkmContainer" class="grid-lkm"></div>
     </section>
 
-    <!-- GALERI LIVE -->
-    <section class="card no-print" style="margin-top:1.5rem;">
-      <h2 class="card-title"><i class="fa-solid fa-images" style="color:#818cf8;"></i> Galeri Live Pengiriman Tugas</h2>
-      <div id="liveImageGallery" class="grid-3">
-        <p style="font-size:12px; color:#64748b; font-style:italic; grid-column: 1 / -1; text-align:center; padding:1rem;">Belum ada foto tugas yang diunggah.</p>
-      </div>
-    </section>
-
-    <!-- LEADERBOARD -->
-    <section class="card no-print">
-      <h2 class="card-title"><i class="fa-solid fa-trophy" style="color:#fbbf24;"></i> Leaderboard Progress Siswa</h2>
-      <div class="table-container">
-        <table>
-          <thead>
-            <tr>
-              <th>Peringkat</th>
-              <th style="text-align:left;">Nama Siswa</th>
-              <th>Kelas</th>
-              <th>LKM Tuntas</th>
-              <th>Rata-Rata Formatif</th>
-              <th>Waktu Kirim Terakhir</th>
-            </tr>
-          </thead>
-          <tbody id="leaderboardBody">
-            <tr><td colspan="6" style="text-align:center; color:#64748b; padding:1rem;">Memuat leaderboard...</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
-
   </main>
 
-  <div id="modalInputGuru" class="modal hidden">
-    <div style="background:#1e293b; border:1px solid #334155; border-radius:16px; width:100%; max-width:400px; padding:1.5rem;">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; border-bottom:1px solid #334155; padding-bottom:0.5rem;">
-        <h3 style="font-size:0.875rem; font-weight:700;">Input Nilai Sumatif</h3>
-        <button onclick="tutupModalInputGuru()" style="background:none; border:none; color:#94a3b8; cursor:pointer;"><i class="fa-solid fa-xmark"></i></button>
-      </div>
-      <div style="display:flex; flex-direction:column; gap:0.75rem;">
-        <div><label>Nama Siswa</label><input type="text" id="inputGuruNama" placeholder="Nama lengkap..."></div>
-        <div><label>Kelas</label><select id="inputGuruKelas"><option value="VIII-A">Kelas VIII-A</option><option value="VIII-B">Kelas VIII-B</option><option value="VIII-C">Kelas VIII-C</option></select></div>
-        <div><label>Nilai Sumatif (0-100)</label><input type="number" id="inputGuruSumatif" min="0" max="100"></div>
-        <div><label>Kehadiran (%)</label><input type="number" id="inputGuruHadir" min="0" max="100" value="95"></div>
-      </div>
-      <div style="display:flex; justify-content:flex-end; gap:0.5rem; margin-top:1.5rem;">
-        <button onclick="tutupModalInputGuru()" class="btn btn-slate">Batal</button>
-        <button onclick="simpanInputGuru()" class="btn btn-emerald">Simpan</button>
-      </div>
-    </div>
-  </div>
-
   <script>
-    // --- AMAN DARI CRASH: RENDERING UI DIJALANKAN TERLEBIH DAHULU ---
     const lkmList = [
       { id: 'lkm2', title: 'LKM 2: Gizi Seimbang', topik: 'Sistem Pencernaan' },
       { id: 'lkm3', title: 'LKM 3: Organ & Enzim', topik: 'Enzim Pencernaan' },
@@ -256,7 +195,6 @@
     let globalRawSiswaData = [];
     let db = null;
 
-    // Jalankan render UI langsung saat halaman dibuka tanpa menunggu jaringan/database
     document.addEventListener('DOMContentLoaded', () => {
       try {
         renderLkmCards();
@@ -318,24 +256,7 @@
         if (typeof firebase !== 'undefined') {
           if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
           db = firebase.firestore();
-          
-          db.collection("siswa_lkm").onSnapshot((snapshot) => {
-            let list = [];
-            snapshot.forEach(docSnap => {
-              const data = docSnap.data();
-              let count = 0, total = 0;
-              lkmList.forEach(lkm => {
-                const val = data[`${lkm.id}_nilai`] || 0;
-                if (val > 0) { count++; total += val; }
-              });
-              list.push({ ...data, tuntasCount: count, avgFormatif: count > 0 ? Math.round(total/count) : 0 });
-            });
-            globalRawSiswaData = list;
-            list.sort((a,b) => (b.tuntasCount - a.tuntasCount) || (b.avgFormatif - a.avgFormatif));
-            renderLeaderboardTable();
-            renderTabelRaport();
-            updateLiveGallery();
-          }, (err) => console.log("Cloud sync warning:", err));
+          muatSemuaDataCloud(); // Panggil manual, aman dari blokir real-time
         }
       } catch(e) {
         console.warn("Database offline mode active", e);
@@ -345,6 +266,29 @@
     function getDocId(nama, kelas) {
       return nama ? `${nama.trim().toLowerCase().replace(/\s+/g, '_')}_${kelas.toLowerCase()}` : '';
     }
+
+    window.muatSemuaDataCloud = async function() {
+      if (!db) { alert("Database belum terhubung."); return; }
+      try {
+        const querySnapshot = await db.collection("siswa_lkm").get();
+        let list = [];
+        querySnapshot.forEach((doc) => {
+          const data = doc.data();
+          let count = 0, total = 0;
+          lkmList.forEach(lkm => {
+            const val = data[`${lkm.id}_nilai`] || 0;
+            if (val > 0) { count++; total += val; }
+          });
+          list.push({ ...data, tuntasCount: count, avgFormatif: count > 0 ? Math.round(total/count) : 0 });
+        });
+        globalRawSiswaData = list;
+        renderTabelRaport();
+        alert(`Berhasil memuat ${list.length} data siswa dari Cloud!`);
+      } catch (err) {
+        console.error("Gagal memuat:", err);
+        alert("Gagal memuat data dari Cloud.");
+      }
+    };
 
     function prosesUploadGambar(e, lkmId) {
       const file = e.target.files[0];
@@ -365,22 +309,21 @@
           canvas.width = width; canvas.height = height;
           canvas.getContext('2d').drawImage(img, 0, 0, width, height);
           
-          const base64 = canvas.toDataURL('image/jpeg', 0.6);
+          const base64 = canvas.toDataURL('image/jpeg', 0.5);
           const docId = getDocId(nama, kelas);
 
           currentSiswaData.nama = nama;
-          currentSiswaData.kelas = kelas;
+          currentSisorData_kelas = kelas;
           currentSiswaData[`${lkmId}_foto`] = base64;
           currentSiswaData[`${lkmId}_nilai`] = 100;
 
           try {
             if (db) {
-              currentSiswaData.lastUpdated = firebase.firestore.FieldValue.serverTimestamp();
               await db.collection("siswa_lkm").doc(docId).set(currentSiswaData, { merge: true });
             }
             alert(`Berhasil menyimpan ${lkmId.toUpperCase()} untuk ${nama}!`);
             renderLkmCards();
-          } catch(err) { alert("Tugas tersimpan secara lokal/cloud."); }
+          } catch(err) { alert("Gagal mengunggah ke Cloud."); }
         };
       };
       reader.readAsDataURL(file);
@@ -412,15 +355,10 @@
       const avg = count > 0 ? Math.round(total / count) : 0;
       const percent = Math.round((count / lkmList.length) * 100);
 
-      const tuntasEl = document.getElementById('statTuntas');
-      const rataEl = document.getElementById('statRataRata');
-      const percentEl = document.getElementById('progressPercent');
-      const progressBar = document.getElementById('progressBar');
-
-      if (tuntasEl) tuntasEl.innerText = `${count} / 7`;
-      if (rataEl) rataEl.innerText = avg;
-      if (percentEl) percentEl.innerText = `${percent}%`;
-      if (progressBar) progressBar.style.width = `${percent}%`;
+      document.getElementById('statTuntas').innerText = `${count} / 7`;
+      document.getElementById('statRataRata').innerText = avg;
+      document.getElementById('progressPercent').innerText = `${percent}%`;
+      document.getElementById('progressBar').style.width = `${percent}%`;
 
       const statusEl = document.getElementById('statStatus');
       if (statusEl) {
@@ -429,92 +367,40 @@
       }
     }
 
-    function renderLeaderboardTable() {
-      const tbody = document.getElementById('leaderboardBody');
-      if (!tbody) return;
-      tbody.innerHTML = '';
-      if (globalRawSiswaData.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#64748b; padding:1rem;">Belum ada data di database.</td></tr>`;
-        return;
-      }
-      globalRawSiswaData.slice(0, 10).forEach((item, idx) => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td style="text-align:center; font-weight:900; color:#818cf8;">#${idx + 1}</td>
-          <td style="font-weight:700; color:white;">${item.nama || '-'}</td>
-          <td style="text-align:center;">${item.kelas || '-'}</td>
-          <td style="text-align:center; color:#34d399; font-weight:700;">${item.tuntasCount} / 7</td>
-          <td style="text-align:center; font-weight:700; color:#818cf8;">${item.avgFormatif}</td>
-          <td style="text-align:center; color:#94a3b8;">${item.lastUpdated ? new Date(item.lastUpdated.seconds*1000).toLocaleString('id-ID') : '-'}</td>
-        `;
-        tbody.appendChild(tr);
-      });
-    }
-
     function renderTabelRaport() {
       const tbody = document.getElementById('tabelRaportBody');
       if (!tbody) return;
       tbody.innerHTML = '';
       if (globalRawSiswaData.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="9" style="text-align:center; color:#64748b; padding:1rem;">Tidak ada data.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:#64748b; padding:1rem;">Belum ada data atau klik tombol "Muat Semua Siswa".</td></tr>`;
         return;
       }
-      globalRawSiswaData.slice(0, 10).forEach((s, idx) => {
+      globalRawSiswaData.forEach((s, idx) => {
         const tr = document.createElement('tr');
         tr.innerHTML = `
           <td style="text-align:center;">${idx + 1}</td>
-          <td style="font-weight:700; color:white;">${s.nama}</td>
-          <td style="text-align:center;">${s.kelas}</td>
+          <td style="font-weight:700; color:white;">${s.nama || '-'}</td>
+          <td style="text-align:center;">${s.kelas || '-'}</td>
           <td style="text-align:center; color:#fbbf24; font-weight:700;">${s.sumatif || '-'}</td>
-          <td style="text-align:center; color:#818cf8; font-weight:700;">${s.avgFormatif}</td>
-          <td style="text-align:center;">${s.kehadiran || 100}%</td>
-          <td style="text-align:center; color:#34d399;">Sangat Baik</td>
-          <td style="text-align:center; font-weight:900; color:white;">${s.avgFormatif}</td>
-          <td><button onclick='alert("Cetak Raport")' class="btn btn-indigo" style="padding:0.25rem 0.5rem; font-size:10px;">Cetak</button></td>
+          <td style="text-align:center; color:#818cf8; font-weight:700;">${s.avgFormatif || 0}</td>
+          <td style="text-align:center; color:#34d399; font-weight:700;">${s.tuntasCount || 0} / 7</td>
+          <td><button onclick='alert("Data siswa: ${s.nama}")' class="btn btn-indigo" style="padding:0.25rem 0.5rem; font-size:10px;">Detail</button></td>
         `;
         tbody.appendChild(tr);
       });
     }
 
-    function updateLiveGallery() {
-      const gallery = document.getElementById('liveImageGallery');
-      if (!gallery) return;
-      gallery.innerHTML = '';
-      let count = 0;
-      globalRawSiswaData.forEach(siswa => {
-        lkmList.forEach(lkm => {
-          if (siswa[`${lkm.id}_foto`]) {
-            count++;
-            const div = document.createElement('div');
-            div.style.cssText = "background:#0f172a; border:1px solid #334155; border-radius:12px; padding:0.5rem; text-align:center;";
-            div.innerHTML = `
-              <img src="${siswa[`${lkm.id}_foto`]}" style="max-height:80px; border-radius:8px; width:100%; object-fit:cover; margin-bottom:0.25rem;" />
-              <p style="font-size:10px; font-weight:700; color:white; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${siswa.nama}</p>
-              <span style="font-size:9px; color:#818cf8;">${lkm.id.toUpperCase()}</span>
-            `;
-            gallery.appendChild(div);
-          }
-        });
+    window.eksporExcel = function() {
+      if (globalRawSiswaData.length === 0) { alert("Belum ada data!"); return; }
+      let csv = "No,Nama,Kelas,Sumatif,Formatif,Tuntas\n";
+      globalRawSiswaData.forEach((s, i) => {
+        csv += `${i+1},"${s.nama}",${s.kelas},${s.sumatif||0},${s.avgFormatif||0},${s.tuntasCount||0}\n`;
       });
-      if (count === 0) {
-        gallery.innerHTML = `<p style="font-size:12px; color:#64748b; font-style:italic; grid-column: 1 / -1; text-align:center; padding:1rem;">Belum ada foto tugas yang diunggah.</p>`;
-      }
+      const link = document.createElement("a");
+      link.href = encodeURI("data:text/csv;charset=utf-8," + csv);
+      link.download = "rekap_nilai.csv";
+      link.click();
     }
-
-    window.bukaModalInputGuru = () => document.getElementById('modalInputGuru').classList.remove('hidden');
-    window.tutupModalInputGuru = () => document.getElementById('modalInputGuru').classList.add('hidden');
-    window.simpanInputGuru = async () => {
-      const nama = document.getElementById('inputGuruNama').value.trim();
-      const kelas = document.getElementById('inputGuruKelas').value;
-      const sumatif = document.getElementById('inputGuruSumatif').value;
-      const kehadiran = document.getElementById('inputGuruHadir').value;
-      if (!nama) { alert("Nama wajib diisi!"); return; }
-      try {
-        if (db) await db.collection("siswa_lkm").doc(getDocId(nama, kelas)).set({ nama, kelas, sumatif, kehadiran }, { merge: true });
-        alert("Nilai berhasil disimpan!");
-        tutupModalInputGuru();
-      } catch(e) { alert("Gagal menyimpan ke database."); }
-    };
   </script>
 </body>
 </html>
