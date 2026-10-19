@@ -4,9 +4,16 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Aplikasi LKM & Raport IPA - SMP Negeri 2 Belang</title>
+  
+  <!-- CDN Tailwind CSS & FontAwesome -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Firebase SDK Compat (Paling Stabil di GitHub Pages) -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
   <style>
     /* Pengaturan Area Cetak */
     .print-only-siswa, .print-only-guru, .print-only-raport { display: none; }
@@ -142,7 +149,7 @@
       </div>
     </section>
 
-    <!-- TOOLS NILAI RAPORT (DENGAN PAGINASI 10 DATA) -->
+    <!-- TOOLS NILAI RAPORT & UPLOAD EXCEL (PAGINASI 10 DATA) -->
     <section class="bg-slate-800 border border-slate-700 rounded-2xl p-5 no-print shadow space-y-4">
       <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-700 pb-4">
         <div>
@@ -228,7 +235,7 @@
       </div>
     </section>
 
-    <!-- LEADERBOARD (DENGAN PAGINASI 10 DATA & SORTING TERDULU) -->
+    <!-- LEADERBOARD PROGRESS SISWA -->
     <section class="bg-slate-800 border border-slate-700 rounded-2xl p-5 no-print shadow space-y-4">
       <div class="flex items-center justify-between">
         <h2 class="text-xs sm:text-sm font-bold text-slate-300 uppercase tracking-wider flex items-center gap-2">
@@ -445,11 +452,9 @@
     </div>
   </div>
 
-  <!-- SCRIPT LOGIK APLIKASI -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, doc, setDoc, getDoc, collection, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
+  <!-- SCRIPT FIREBASE GLOBAL (BEBAS ERROR SYNTAX) -->
+  <script>
+    // Konfigurasi Firebase
     const firebaseConfig = {
       apiKey: "AIzaSyBD53DUan3_58TxIOK3pFsAWFay07mdLZ",
       authDomain: "aplikasi-nilai-ipa-smpn2belang.firebaseapp.com",
@@ -459,8 +464,9 @@
       appId: "1:754730321834:web:71dc0230831140b2aa4d"
     };
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+    // Inisialisasi Firebase Global
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
 
     const lkmList = [
       { id: 'lkm2', title: 'LKM 2: Gizi Seimbang & Isi Piringku', topik: 'Sistem Pencernaan & Zat Aditif' },
@@ -582,14 +588,14 @@
               currentSiswaData.kelas = kelas;
               currentSiswaData[`${lkm.id}_foto`] = base64String;
               currentSiswaData[`${lkm.id}_nilai`] = 100;
-              currentSiswaData.lastUpdated = serverTimestamp();
+              currentSiswaData.lastUpdated = firebase.firestore.FieldValue.serverTimestamp();
 
               try {
-                await setDoc(doc(db, "siswa_lkm", docId), currentSiswaData, { merge: true });
+                await db.collection("siswa_lkm").doc(docId).set(currentSiswaData, { merge: true });
                 alert(`Berhasil menyimpan ${lkm.id} untuk ${nama}!`);
                 renderLkmCards();
               } catch (err) {
-                console.error("Gagal menyimpan ke Firestore:", err);
+                console.error("Gagal menyimpan:", err);
                 alert("Gagal mengunggah gambar.");
                 uploadBtn.disabled = false;
                 uploadBtn.innerHTML = `<i class="fa-solid fa-camera"></i> Coba Lagi`;
@@ -612,10 +618,9 @@
       const docId = getDocId(nama, kelas);
 
       try {
-        const docRef = doc(db, "siswa_lkm", docId);
-        const docSnap = await getDoc(docRef);
+        const docSnap = await db.collection("siswa_lkm").doc(docId).get();
 
-        if (docSnap.exists()) {
+        if (docSnap.exists) {
           currentSiswaData = docSnap.data();
           renderLkmCards();
           alert(`Data ${nama} berhasil dimuat!`);
@@ -631,8 +636,7 @@
     };
 
     function initListener() {
-      const colRef = collection(db, "siswa_lkm");
-      onSnapshot(colRef, (snapshot) => {
+      db.collection("siswa_lkm").onSnapshot((snapshot) => {
         let list = [];
         snapshot.forEach(docSnap => {
           const data = docSnap.data();
@@ -653,10 +657,10 @@
 
         globalRawSiswaData = list;
         
-        // SORTING LEADERBOARD:
-        // 1. Jumlah LKM Tuntas
-        // 2. Rata-Rata Formatif
-        // 3. Waktu Kirim Terlama (Siswa yang lebih dulu mengunggah berada di posisi teratas)
+        // LEADERBOARD SORTING:
+        // 1. Jumlah LKM Tuntas terbanyak
+        // 2. Rata-Rata Formatif tertinggi
+        // 3. Waktu Kirim Terlama (Siswa yang lebih dulu mengunggah berada di puncak)
         list.sort((a, b) => {
           if (b.tuntasCount !== a.tuntasCount) return b.tuntasCount - a.tuntasCount;
           if (b.avgFormatif !== a.avgFormatif) return b.avgFormatif - a.avgFormatif;
@@ -669,6 +673,8 @@
         renderTabelRaport();
         updateStats();
         updateLiveGallery();
+      }, (error) => {
+        console.error("Firestore Listen error:", error);
       });
     }
 
@@ -932,13 +938,13 @@
       if (!nama) { alert("Nama siswa wajib diisi!"); return; }
 
       const docId = getDocId(nama, kelas);
-      let payload = { nama, kelas, lastUpdated: serverTimestamp() };
+      let payload = { nama, kelas, lastUpdated: firebase.firestore.FieldValue.serverTimestamp() };
 
       if (sumatifVal !== "") payload.sumatif = parseFloat(sumatifVal);
       if (hadirVal !== "") payload.kehadiran = parseFloat(hadirVal);
 
       try {
-        await setDoc(doc(db, "siswa_lkm", docId), payload, { merge: true });
+        await db.collection("siswa_lkm").doc(docId).set(payload, { merge: true });
         alert(`Berhasil menyimpan nilai untuk ${nama}!`);
         tutupModalInputGuru();
       } catch (err) {
