@@ -260,7 +260,7 @@
       </div>
     </section>
 
-    <!-- LEADERBOARD (DENGAN PAGINATION) -->
+    <!-- LEADERBOARD (DENGAN PAGINATION & PRIORITAS LEBIH DULU KIRIM) -->
     <section class="bg-slate-900/60 border border-slate-800 rounded-3xl p-5 sm:p-6 no-print shadow-xl backdrop-blur-xl space-y-5">
       <div class="flex items-center justify-between">
         <h2 class="text-xs sm:text-sm font-bold text-slate-300 uppercase tracking-wider flex items-center gap-2.5">
@@ -691,8 +691,21 @@
 
         globalRawSiswaData = list;
         
-        // Urutkan berdasarkan LKM terbanyak, lalu rata-rata formatif
-        list.sort((a, b) => b.tuntasCount - a.tuntasCount || b.avgFormatif - a.avgFormatif);
+        // UTAMA: Urutkan berdasarkan:
+        // 1. Jumlah LKM Tuntas terbanyak (descending)
+        // 2. Rata-rata Nilai Formatif tertinggi (descending)
+        // 3. Waktu Kirim Terakhir (Timestamp Terlama / Lebih dulu mengirimkan berada di puncak)
+        list.sort((a, b) => {
+          if (b.tuntasCount !== a.tuntasCount) {
+            return b.tuntasCount - a.tuntasCount;
+          }
+          if (b.avgFormatif !== a.avgFormatif) {
+            return b.avgFormatif - a.avgFormatif;
+          }
+          const timeA = a.lastUpdated ? (a.lastUpdated.seconds || 0) : Infinity;
+          const timeB = b.lastUpdated ? (b.lastUpdated.seconds || 0) : Infinity;
+          return timeA - timeB; // ascending timestamp (siapa duluan)
+        });
 
         renderLeaderboardTable();
         renderTabelRaport();
