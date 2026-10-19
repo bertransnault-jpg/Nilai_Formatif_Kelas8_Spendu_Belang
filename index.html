@@ -10,12 +10,11 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
-  <!-- Firebase SDK Compat (Paling Stabil di GitHub Pages) -->
+  <!-- Firebase SDK Compat -->
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 
   <style>
-    /* Pengaturan Area Cetak */
     .print-only-siswa, .print-only-guru, .print-only-raport { display: none; }
 
     @media print {
@@ -149,7 +148,7 @@
       </div>
     </section>
 
-    <!-- TOOLS NILAI RAPORT & UPLOAD EXCEL (PAGINASI 10 DATA) -->
+    <!-- TOOLS NILAI RAPORT & UPLOAD EXCEL -->
     <section class="bg-slate-800 border border-slate-700 rounded-2xl p-5 no-print shadow space-y-4">
       <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-700 pb-4">
         <div>
@@ -452,9 +451,9 @@
     </div>
   </div>
 
-  <!-- SCRIPT FIREBASE GLOBAL (BEBAS ERROR SYNTAX) -->
+  <!-- SCRIPT LOGIKA APLIKASI -->
   <script>
-    // Konfigurasi Firebase
+    // Config Firebase
     const firebaseConfig = {
       apiKey: "AIzaSyBD53DUan3_58TxIOK3pFsAWFay07mdLZ",
       authDomain: "aplikasi-nilai-ipa-smpn2belang.firebaseapp.com",
@@ -464,8 +463,11 @@
       appId: "1:754730321834:web:71dc0230831140b2aa4d"
     };
 
-    // Inisialisasi Firebase Global
-    firebase.initializeApp(firebaseConfig);
+    try {
+      firebase.initializeApp(firebaseConfig);
+    } catch(e) {
+      console.log("Firebase initialized");
+    }
     const db = firebase.firestore();
 
     const lkmList = [
@@ -547,8 +549,10 @@
           const file = e.target.files[0];
           if (!file) return;
 
-          const nama = document.getElementById('inputNama').value.trim();
-          const kelas = document.getElementById('inputKelas').value;
+          const namaInput = document.getElementById('inputNama');
+          const kelasInput = document.getElementById('inputKelas');
+          const nama = namaInput ? namaInput.value.trim() : '';
+          const kelas = kelasInput ? kelasInput.value : 'VIII-A';
 
           if (!nama) {
             alert("Harap isi Nama Lengkap Murid terlebih dahulu!");
@@ -611,8 +615,11 @@
     }
 
     window.muatDataSiswa = async function() {
-      const nama = document.getElementById('inputNama').value.trim();
-      const kelas = document.getElementById('inputKelas').value;
+      const namaInput = document.getElementById('inputNama');
+      const kelasInput = document.getElementById('inputKelas');
+      const nama = namaInput ? namaInput.value.trim() : '';
+      const kelas = kelasInput ? kelasInput.value : 'VIII-A';
+
       if (!nama) { alert("Masukkan Nama Murid terlebih dahulu!"); return; }
 
       const docId = getDocId(nama, kelas);
@@ -657,10 +664,10 @@
 
         globalRawSiswaData = list;
         
-        // LEADERBOARD SORTING:
-        // 1. Jumlah LKM Tuntas terbanyak
-        // 2. Rata-Rata Formatif tertinggi
-        // 3. Waktu Kirim Terlama (Siswa yang lebih dulu mengunggah berada di puncak)
+        // Sorting Leaderboard:
+        // 1. Tuntas LKM terbanyak
+        // 2. Formatif tertinggi
+        // 3. Waktu Kirim paling dulu
         list.sort((a, b) => {
           if (b.tuntasCount !== a.tuntasCount) return b.tuntasCount - a.tuntasCount;
           if (b.avgFormatif !== a.avgFormatif) return b.avgFormatif - a.avgFormatif;
@@ -673,8 +680,8 @@
         renderTabelRaport();
         updateStats();
         updateLiveGallery();
-      }, (error) => {
-        console.error("Firestore Listen error:", error);
+      }, (err) => {
+        console.error("Snapshot error:", err);
       });
     }
 
@@ -695,10 +702,10 @@
 
       if (list.length === 0) {
         tbody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-slate-500">Belum ada data siswa di database.</td></tr>`;
-        document.getElementById('paginationInfoLeaderboard').innerText = "Menampilkan 0 dari 0 data";
-        document.getElementById('pageIndicatorLeaderboard').innerText = "1 / 1";
-        document.getElementById('btnPrevLeaderboard').disabled = true;
-        document.getElementById('btnNextLeaderboard').disabled = true;
+        setElemText('paginationInfoLeaderboard', "Menampilkan 0 dari 0 data");
+        setElemText('pageIndicatorLeaderboard', "1 / 1");
+        setElemDisabled('btnPrevLeaderboard', true);
+        setElemDisabled('btnNextLeaderboard', true);
         return;
       }
 
@@ -725,10 +732,10 @@
         tbody.appendChild(tr);
       });
 
-      document.getElementById('paginationInfoLeaderboard').innerText = `Menampilkan ${start + 1} - ${Math.min(end, list.length)} dari ${list.length} data`;
-      document.getElementById('pageIndicatorLeaderboard').innerText = `${currentPageLeaderboard} / ${maxPage}`;
-      document.getElementById('btnPrevLeaderboard').disabled = currentPageLeaderboard === 1;
-      document.getElementById('btnNextLeaderboard').disabled = currentPageLeaderboard === maxPage;
+      setElemText('paginationInfoLeaderboard', `Menampilkan ${start + 1} - ${Math.min(end, list.length)} dari ${list.length} data`);
+      setElemText('pageIndicatorLeaderboard', `${currentPageLeaderboard} / ${maxPage}`);
+      setElemDisabled('btnPrevLeaderboard', currentPageLeaderboard === 1);
+      setElemDisabled('btnNextLeaderboard', currentPageLeaderboard === maxPage);
     }
 
     // PAGINASI RAPORT
@@ -747,7 +754,8 @@
     };
 
     function getFilteredRaportList() {
-      const filter = document.getElementById('filterKelasRaport').value;
+      const filterElem = document.getElementById('filterKelasRaport');
+      const filter = filterElem ? filterElem.value : 'ALL';
       if (filter === 'ALL') return globalRawSiswaData;
       return globalRawSiswaData.filter(s => s.kelas === filter);
     }
@@ -759,10 +767,10 @@
 
       if (filteredList.length === 0) {
         tbody.innerHTML = `<tr><td colspan="9" class="p-4 text-center text-slate-500">Tidak ada data untuk kelas ini.</td></tr>`;
-        document.getElementById('paginationInfoRaport').innerText = "Menampilkan 0 dari 0 data";
-        document.getElementById('pageIndicatorRaport').innerText = "1 / 1";
-        document.getElementById('btnPrevRaport').disabled = true;
-        document.getElementById('btnNextRaport').disabled = true;
+        setElemText('paginationInfoRaport', "Menampilkan 0 dari 0 data");
+        setElemText('pageIndicatorRaport', "1 / 1");
+        setElemDisabled('btnPrevRaport', true);
+        setElemDisabled('btnNextRaport', true);
         return;
       }
 
@@ -814,10 +822,10 @@
         tbody.appendChild(tr);
       });
 
-      document.getElementById('paginationInfoRaport').innerText = `Menampilkan ${start + 1} - ${Math.min(end, filteredList.length)} dari ${filteredList.length} data`;
-      document.getElementById('pageIndicatorRaport').innerText = `${currentPageRaport} / ${maxPage}`;
-      document.getElementById('btnPrevRaport').disabled = currentPageRaport === 1;
-      document.getElementById('btnNextRaport').disabled = currentPageRaport === maxPage;
+      setElemText('paginationInfoRaport', `Menampilkan ${start + 1} - ${Math.min(end, filteredList.length)} dari ${filteredList.length} data`);
+      setElemText('pageIndicatorRaport', `${currentPageRaport} / ${maxPage}`);
+      setElemDisabled('btnPrevRaport', currentPageRaport === 1);
+      setElemDisabled('btnNextRaport', currentPageRaport === maxPage);
     }
 
     function updateStats() {
@@ -834,21 +842,25 @@
       const avg = count > 0 ? Math.round(total / count) : 0;
       const percent = Math.round((count / lkmList.length) * 100);
 
-      document.getElementById('statTuntas').innerText = `${count} / 7`;
-      document.getElementById('statRataRata').innerText = avg;
-      document.getElementById('progressPercent').innerText = `${percent}%`;
-      document.getElementById('progressBar').style.width = `${percent}%`;
+      setElemText('statTuntas', `${count} / 7`);
+      setElemText('statRataRata', avg);
+      setElemText('progressPercent', `${percent}%`);
+      
+      const bar = document.getElementById('progressBar');
+      if (bar) bar.style.width = `${percent}%`;
 
       const statusEl = document.getElementById('statStatus');
-      if (count === 7) {
-        statusEl.innerText = "Tuntas";
-        statusEl.className = "text-xs font-bold text-emerald-400 mt-1";
-      } else if (count > 0) {
-        statusEl.innerText = "Proses Belajar";
-        statusEl.className = "text-xs font-bold text-indigo-400 mt-1";
-      } else {
-        statusEl.innerText = "Belum Ada Data";
-        statusEl.className = "text-xs font-bold text-amber-400 mt-1";
+      if (statusEl) {
+        if (count === 7) {
+          statusEl.innerText = "Tuntas";
+          statusEl.className = "text-xs font-bold text-emerald-400 mt-1";
+        } else if (count > 0) {
+          statusEl.innerText = "Proses Belajar";
+          statusEl.className = "text-xs font-bold text-indigo-400 mt-1";
+        } else {
+          statusEl.innerText = "Belum Ada Data";
+          statusEl.className = "text-xs font-bold text-amber-400 mt-1";
+        }
       }
 
       const pendingUl = document.getElementById('pendingLkmList');
@@ -911,29 +923,51 @@
       });
     }
 
+    // Helper functions
+    function setElemText(id, text) {
+      const el = document.getElementById(id);
+      if (el) el.innerText = text;
+    }
+
+    function setElemDisabled(id, disabled) {
+      const el = document.getElementById(id);
+      if (el) el.disabled = disabled;
+    }
+
     window.openImageModal = function(url, title) {
-      document.getElementById('modalImageElement').src = url;
-      document.getElementById('modalImageTitle').innerText = title;
-      document.getElementById('imageModal').classList.remove('hidden');
+      const imgElem = document.getElementById('modalImageElement');
+      const titleElem = document.getElementById('modalImageTitle');
+      const modal = document.getElementById('imageModal');
+      if (imgElem) imgElem.src = url;
+      if (titleElem) titleElem.innerText = title;
+      if (modal) modal.classList.remove('hidden');
     }
 
     window.closeImageModal = function() {
-      document.getElementById('imageModal').classList.add('hidden');
+      const modal = document.getElementById('imageModal');
+      if (modal) modal.classList.add('hidden');
     }
 
     window.bukaModalInputGuru = function() {
-      document.getElementById('modalInputGuru').classList.remove('hidden');
+      const modal = document.getElementById('modalInputGuru');
+      if (modal) modal.classList.remove('hidden');
     }
 
     window.tutupModalInputGuru = function() {
-      document.getElementById('modalInputGuru').classList.add('hidden');
+      const modal = document.getElementById('modalInputGuru');
+      if (modal) modal.classList.add('hidden');
     }
 
     window.simpanInputGuru = async function() {
-      const nama = document.getElementById('inputGuruNama').value.trim();
-      const kelas = document.getElementById('inputGuruKelas').value;
-      const sumatifVal = document.getElementById('inputGuruSumatif').value;
-      const hadirVal = document.getElementById('inputGuruHadir').value;
+      const namaInput = document.getElementById('inputGuruNama');
+      const kelasInput = document.getElementById('inputGuruKelas');
+      const sumatifInput = document.getElementById('inputGuruSumatif');
+      const hadirInput = document.getElementById('inputGuruHadir');
+
+      const nama = namaInput ? namaInput.value.trim() : '';
+      const kelas = kelasInput ? kelasInput.value : 'VIII-A';
+      const sumatifVal = sumatifInput ? sumatifInput.value : '';
+      const hadirVal = hadirInput ? hadirInput.value : '';
 
       if (!nama) { alert("Nama siswa wajib diisi!"); return; }
 
@@ -958,23 +992,24 @@
         alert("Muat atau isi Identitas Murid terlebih dahulu!");
         return;
       }
-      document.getElementById('printNama').innerText = currentSiswaData.nama;
-      document.getElementById('printKelas').innerText = currentSiswaData.kelas;
+      setElemText('printNama', currentSiswaData.nama);
+      setElemText('printKelas', currentSiswaData.kelas);
 
       const tbody = document.getElementById('printTableBody');
-      tbody.innerHTML = '';
-
-      lkmList.forEach((lkm, idx) => {
-        const nilai = currentSiswaData[`${lkm.id}_nilai`] || 0;
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td class="border border-black p-2 text-center font-bold">LKM ${idx + 2}</td>
-          <td class="border border-black p-2">${lkm.title}</td>
-          <td class="border border-black p-2 text-center font-bold">${nilai > 100 ? 100 : nilai}</td>
-          <td class="border border-black p-2 text-center">${nilai === 100 ? 'Tuntas (Terverifikasi)' : 'Belum Selesai'}</td>
-        `;
-        tbody.appendChild(tr);
-      });
+      if (tbody) {
+        tbody.innerHTML = '';
+        lkmList.forEach((lkm, idx) => {
+          const nilai = currentSiswaData[`${lkm.id}_nilai`] || 0;
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td class="border border-black p-2 text-center font-bold">LKM ${idx + 2}</td>
+            <td class="border border-black p-2">${lkm.title}</td>
+            <td class="border border-black p-2 text-center font-bold">${nilai > 100 ? 100 : nilai}</td>
+            <td class="border border-black p-2 text-center">${nilai === 100 ? 'Tuntas (Terverifikasi)' : 'Belum Selesai'}</td>
+          `;
+          tbody.appendChild(tr);
+        });
+      }
 
       document.body.className = "bg-white text-black mode-print-siswa";
       window.print();
@@ -982,8 +1017,8 @@
     }
 
     window.cetakRaportSiswaObj = function(s) {
-      document.getElementById('raportPrintNama').innerText = s.nama;
-      document.getElementById('raportPrintKelas').innerText = s.kelas;
+      setElemText('raportPrintNama', s.nama);
+      setElemText('raportPrintKelas', s.kelas);
       
       let count = 0;
       let total = 0;
@@ -994,12 +1029,11 @@
       const formatif = count > 0 ? Math.round(total / count) : 0;
       let nilaiAkhir = s.sumatif !== undefined && count > 0 ? Math.round((s.sumatif * 0.5) + (formatif * 0.5)) : (count > 0 ? formatif : 0);
 
-      document.getElementById('raportCellNilaiAkhir').innerText = nilaiAkhir;
-      document.getElementById('raportCellHadir').innerText = (s.kehadiran !== undefined ? s.kehadiran : 100) + '%';
-      document.getElementById('raportCellSikap').innerText = "Sangat Baik";
-      document.getElementById('tanggalCetakRaport').innerText = new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
-
-      document.getElementById('raportCellDeskripsi').innerText = `Peserta didik menunjukkan penguasaan yang sangat baik dalam memahami materi Ilmu Pengetahuan Alam (IPA) Fase D khususnya pada topik Sistem Organ Tubuh Manusia, Pencernaan, Pernapasan, Peredaran Darah, dan Ekskresi, serta menunjukkan kedisiplinan dan tanggung jawab yang tinggi dalam menyelesaikan penugasan lembar kerja murid (LKM).`;
+      setElemText('raportCellNilaiAkhir', nilaiAkhir);
+      setElemText('raportCellHadir', (s.kehadiran !== undefined ? s.kehadiran : 100) + '%');
+      setElemText('raportCellSikap', "Sangat Baik");
+      setElemText('tanggalCetakRaport', new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }));
+      setElemText('raportCellDeskripsi', `Peserta didik menunjukkan penguasaan yang sangat baik dalam memahami materi Ilmu Pengetahuan Alam (IPA) Fase D khususnya pada topik Sistem Organ Tubuh Manusia, Pencernaan, Pernapasan, Peredaran Darah, dan Ekskresi, serta menunjukkan kedisiplinan dan tanggung jawab yang tinggi dalam menyelesaikan penugasan lembar kerja murid (LKM).`);
 
       document.body.className = "bg-white text-black mode-print-raport";
       window.print();
@@ -1008,32 +1042,33 @@
 
     window.cetakLaporanGuru = function() {
       const tbody = document.getElementById('printTableBodyGuru');
-      tbody.innerHTML = '';
+      if (tbody) {
+        tbody.innerHTML = '';
+        globalRawSiswaData.forEach((s, idx) => {
+          let tuntasCount = 0;
+          let rowCols = '';
 
-      globalRawSiswaData.forEach((s, idx) => {
-        let tuntasCount = 0;
-        let rowCols = '';
+          lkmList.forEach(lkm => {
+            const val = s[`${lkm.id}_nilai`] || 0;
+            if (val === 100) {
+              tuntasCount++;
+              rowCols += `<td class="border border-black p-2 text-center font-bold text-emerald-600">&#10004;</td>`;
+            } else {
+              rowCols += `<td class="border border-black p-2 text-center text-slate-300">-</td>`;
+            }
+          });
 
-        lkmList.forEach(lkm => {
-          const val = s[`${lkm.id}_nilai`] || 0;
-          if (val === 100) {
-            tuntasCount++;
-            rowCols += `<td class="border border-black p-2 text-center font-bold text-emerald-600">&#10004;</td>`;
-          } else {
-            rowCols += `<td class="border border-black p-2 text-center text-slate-300">-</td>`;
-          }
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td class="border border-black p-2 text-center">${idx + 1}</td>
+            <td class="border border-black p-2 font-semibold">${s.nama}</td>
+            <td class="border border-black p-2 text-center">${s.kelas}</td>
+            ${rowCols}
+            <td class="border border-black p-2 text-center font-bold bg-slate-100">${tuntasCount} / 7</td>
+          `;
+          tbody.appendChild(tr);
         });
-
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td class="border border-black p-2 text-center">${idx + 1}</td>
-          <td class="border border-black p-2 font-semibold">${s.nama}</td>
-          <td class="border border-black p-2 text-center">${s.kelas}</td>
-          ${rowCols}
-          <td class="border border-black p-2 text-center font-bold bg-slate-100">${tuntasCount} / 7</td>
-        `;
-        tbody.appendChild(tr);
-      });
+      }
 
       document.body.className = "bg-white text-black mode-print-guru";
       window.print();
