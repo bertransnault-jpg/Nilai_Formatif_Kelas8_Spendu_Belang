@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Aplikasi LKM & Raport IPA - SMP Negeri 2 Belang</title>
   
-  <!-- FontAwesome & XLSX CDN -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
@@ -17,51 +16,35 @@
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { background-color: #0f172a; color: #f8fafc; font-family: system-ui, -apple-system, sans-serif; min-height: 100vh; padding-bottom: 3rem; }
     .container { max-width: 1280px; margin: 0 auto; padding: 1.5rem 1rem; }
-
-    /* Header */
     header { background-color: #1e293b; border-bottom: 1px solid #334155; position: sticky; top: 0; z-index: 40; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
     .header-content { max-width: 1280px; margin: 0 auto; padding: 0.75rem 1rem; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 1rem; }
-    .brand { display: flex; items-center; gap: 0.75rem; }
+    .brand { display: flex; align-items: center; gap: 0.75rem; }
     .brand-logo { width: 40px; height: 40px; background-color: #4f46e5; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.25rem; font-weight: 900; }
     .badge { background: rgba(99,102,241,0.2); border: 1px solid rgba(99,102,241,0.3); color: #a5b4fc; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 9999px; text-transform: uppercase; }
-
-    /* Layout Cards */
     .card { background-color: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 1.25rem; margin-bottom: 1.5rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
     .card-title { font-size: 0.875rem; font-weight: 700; color: #cbd5e1; margin-bottom: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 0.5rem; }
-
-    /* Grid System */
     .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; }
     .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; }
     .grid-lkm { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; }
-
-    /* Form Controls */
     input[type="text"], input[type="number"], select { width: 100%; padding: 0.75rem; background-color: #0f172a; border: 1px solid #334155; border-radius: 12px; color: white; font-size: 0.875rem; outline: none; }
     input:focus, select:focus { border-color: #6366f1; }
     label { display: block; font-size: 0.75rem; font-weight: 600; color: #94a3b8; margin-bottom: 0.25rem; }
-
-    /* Buttons */
     .btn { padding: 0.5rem 1rem; border-radius: 12px; font-size: 0.75rem; font-weight: 700; border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 0.5rem; transition: 0.2s; color: white; }
     .btn-indigo { background-color: #4f46e5; } .btn-indigo:hover { background-color: #4338ca; }
     .btn-emerald { background-color: #059669; } .btn-emerald:hover { background-color: #047857; }
     .btn-amber { background-color: #d97706; color: #0f172a; } .btn-amber:hover { background-color: #b45309; }
     .btn-sky { background-color: #0284c7; } .btn-sky:hover { background-color: #0369a1; }
     .btn-slate { background-color: #334155; } .btn-slate:hover { background-color: #475569; }
-
-    /* Dashboard Stats Cards */
     .stat-box { background-color: #1e293b; border: 1px solid #334155; padding: 1rem; border-radius: 16px; display: flex; align-items: center; justify-content: space-between; }
     .stat-value { font-size: 1.5rem; font-weight: 900; margin-top: 0.25rem; }
     .stat-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; }
-
-    /* Table Styling */
     .table-container { overflow-x: auto; border-radius: 12px; border: 1px solid #334155; }
     table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.75rem; }
     th { background-color: #0f172a; color: #94a3b8; padding: 0.75rem; font-weight: 600; text-transform: uppercase; border-bottom: 1px solid #334155; text-align: center; }
     td { padding: 0.75rem; border-bottom: 1px solid rgba(51,65,85,0.5); background-color: rgba(15,23,42,0.5); }
     tr:hover td { background-color: rgba(30,41,59,0.8); }
-
-    /* Print & Modals */
     .print-only-siswa, .print-only-guru, .print-only-raport { display: none; }
-    .modal { fixed: inset 0; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(15,23,42,0.8); backdrop-filter: blur(4px); z-index: 50; display: flex; align-items: center; justify-content: center; padding: 1rem; }
+    .modal { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(15,23,42,0.8); backdrop-filter: blur(4px); z-index: 50; display: flex; align-items: center; justify-content: center; padding: 1rem; }
     .hidden { display: none !important; }
 
     @media print {
@@ -74,7 +57,6 @@
 </head>
 <body>
 
-  <!-- HEADER -->
   <header class="no-print">
     <div class="header-content">
       <div class="brand">
@@ -97,7 +79,6 @@
 
   <main class="container">
 
-    <!-- FORM IDENTITAS SISWA -->
     <section class="card no-print">
       <h2 class="card-title"><i class="fa-solid fa-user-astronaut" style="color:#818cf8;"></i> Identitas Murid</h2>
       <div class="grid-2">
@@ -119,7 +100,6 @@
       </div>
     </section>
 
-    <!-- DASHBOARD STATISTIK -->
     <section class="grid-2 no-print">
       <div style="display:flex; flex-direction:column; gap:1rem;">
         <div class="grid-3">
@@ -167,7 +147,6 @@
       </div>
     </section>
 
-    <!-- TOOLS NILAI RAPORT -->
     <section class="card no-print" style="margin-top:1.5rem;">
       <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; border-bottom:1px solid #334155; padding-bottom:1rem; margin-bottom:1rem;">
         <div>
@@ -218,13 +197,11 @@
       </div>
     </section>
 
-    <!-- KARTU LKM -->
     <section class="no-print">
       <h2 class="card-title"><i class="fa-solid fa-layer-group" style="color:#818cf8;"></i> Lembar Kerja Murid (LKM 2 - 8)</h2>
       <div id="lkmContainer" class="grid-lkm"></div>
     </section>
 
-    <!-- GALERI LIVE -->
     <section class="card no-print" style="margin-top:1.5rem;">
       <h2 class="card-title"><i class="fa-solid fa-images" style="color:#818cf8;"></i> Galeri Live Pengiriman Tugas</h2>
       <div id="liveImageGallery" class="grid-3">
@@ -232,7 +209,6 @@
       </div>
     </section>
 
-    <!-- LEADERBOARD -->
     <section class="card no-print">
       <h2 class="card-title"><i class="fa-solid fa-trophy" style="color:#fbbf24;"></i> Leaderboard Progress Siswa</h2>
       <div class="table-container">
@@ -265,7 +241,6 @@
 
   </main>
 
-  <!-- MODAL INPUT GURU -->
   <div id="modalInputGuru" class="modal hidden">
     <div style="background:#1e293b; border:1px solid #334155; border-radius:16px; width:100%; max-width:400px; padding:1.5rem;">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; border-bottom:1px solid #334155; padding-bottom:0.5rem;">
@@ -301,7 +276,6 @@
     </div>
   </div>
 
-  <!-- SCRIPT LOGIKA UTAMA -->
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyBD53DUan3_58TxIOK3pFsAWFay07mdLZ",
