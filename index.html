@@ -85,7 +85,7 @@
           <div class="bg-slate-800/80 border border-slate-700 p-4 rounded-2xl flex items-center justify-between">
             <div>
               <p class="text-xs text-slate-400 font-medium">LKM Tuntas</p>
-              <h3 id="statTuntas" class="text-2xl font-black text-emerald-400 mt-1">0 / 7</h3>
+              <h3 id="statTuntas" class="text-2xl font-black text-emerald-400 mt-1">0 / 9</h3>
             </div>
             <div class="w-12 h-12 bg-emerald-500/10 border border-emerald-500/20 rounded-xl flex items-center justify-center text-emerald-400 text-xl">
               <i class="fa-solid fa-circle-check"></i>
@@ -141,7 +141,7 @@
           <h2 class="text-sm font-black text-white uppercase tracking-wider flex items-center gap-2">
             <i class="fa-solid fa-award text-amber-400"></i> Tools Pengolahan Nilai Raport & Deskripsi Capaian KD
           </h2>
-          <p class="text-xs text-slate-400 mt-1">Sistem otomatis menghitung formatif proporsional (LKM tuntas ÷ 7 × 100), kehadiran, dan narasi deskripsi.</p>
+          <p class="text-xs text-slate-400 mt-1">Sistem otomatis menghitung formatif proporsional (LKM tuntas ÷ 9 × 100), kehadiran, dan narasi deskripsi.</p>
         </div>
         <div class="flex flex-wrap items-center gap-2 w-full sm:w-auto">
           <select id="filterKelasRaport" onchange="gantiFilterRaport()" class="text-xs p-2.5 bg-slate-900 border border-slate-700 rounded-xl text-white outline-none">
@@ -200,7 +200,7 @@
     <!-- KARTU LKM -->
     <section class="no-print">
       <h2 class="text-xs sm:text-sm font-bold text-slate-300 mb-4 uppercase tracking-wider flex items-center gap-2">
-        <i class="fa-solid fa-layer-group text-indigo-400"></i> Lembar Kerja Murid (LKM 2 - 8)
+        <i class="fa-solid fa-layer-group text-indigo-400"></i> Lembar Kerja Murid (LKM 2 - 10)
       </h2>
       <div id="lkmContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
     </section>
@@ -403,20 +403,22 @@
       <p class="text-xs font-bold uppercase">REKAPITULASI CENTANG (CHECKLIST) PENYELESAIAN LKM IPA (FASE D)</p>
       <p class="text-xs italic">Guru Mata Pelajaran: N. Tora, S.Pd.</p>
     </div>
-    <table class="w-full text-[11px] border-collapse border border-black mb-6">
+    <table class="w-full text-[10px] border-collapse border border-black mb-6">
       <thead>
         <tr class="bg-slate-200 text-center font-bold">
           <th class="border border-black p-2 w-8">No</th>
           <th class="border border-black p-2 text-left">Nama Lengkap Siswa</th>
-          <th class="border border-black p-2 w-16">Kelas</th>
-          <th class="border border-black p-2 w-14">LKM 2</th>
-          <th class="border border-black p-2 w-14">LKM 3</th>
-          <th class="border border-black p-2 w-14">LKM 4</th>
-          <th class="border border-black p-2 w-14">LKM 5</th>
-          <th class="border border-black p-2 w-14">LKM 6</th>
-          <th class="border border-black p-2 w-14">LKM 7</th>
-          <th class="border border-black p-2 w-14">LKM 8</th>
-          <th class="border border-black p-2 w-20">Total Tuntas</th>
+          <th class="border border-black p-2 w-14">Kelas</th>
+          <th class="border border-black p-2 w-10">L2</th>
+          <th class="border border-black p-2 w-10">L3</th>
+          <th class="border border-black p-2 w-10">L4</th>
+          <th class="border border-black p-2 w-10">L5</th>
+          <th class="border border-black p-2 w-10">L6</th>
+          <th class="border border-black p-2 w-10">L7</th>
+          <th class="border border-black p-2 w-10">L8</th>
+          <th class="border border-black p-2 w-10">L9</th>
+          <th class="border border-black p-2 w-10">L10</th>
+          <th class="border border-black p-2 w-16">Total</th>
         </tr>
       </thead>
       <tbody id="printTableBodyGuru"></tbody>
@@ -452,7 +454,7 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    const TOTAL_LKM = 7;
+    const TOTAL_LKM = 9; // Total modul aktif (LKM 2 sampai LKM 10)
     const lkmList = [
       { id: 'lkm2', title: 'LKM 2: Gizi Seimbang & Isi Piringku', topik: 'Sistem Pencernaan & Zat Aditif' },
       { id: 'lkm3', title: 'LKM 3: Organ & Enzim Pencernaan', topik: 'Enzim & Saluran Cerna' },
@@ -460,7 +462,9 @@
       { id: 'lkm5', title: 'LKM 5: Peredaran Darah & Plasma', topik: 'Sistem Peredaran Darah' },
       { id: 'lkm6', title: 'LKM 6: Script Video Anti-Rokok', topik: 'Kampanye Kesehatan & Biotek' },
       { id: 'lkm7', title: 'LKM 7: Sistem Ekskresi', topik: 'Sistem Ekskresi Manusia' },
-      { id: 'lkm8', title: 'LKM 8: Jurnal Refleksi Diri', topik: 'Evaluasi Belajar & Self Reflection' }
+      { id: 'lkm8', title: 'LKM 8: Jurnal Refleksi Diri', topik: 'Evaluasi Belajar & Self Reflection' },
+      { id: 'lkm9', title: 'LKM 9: Usaha, Daya & Energi', topik: 'Konsep Usaha, Daya, dan Energi' },
+      { id: 'lkm10', title: 'LKM 10: Pesawat Sederhana', topik: 'Jenis & Keuntungan Mekanik Pesawat Sederhana' }
     ];
 
     let currentSiswaData = { nama: '', kelas: 'VIII-A' };
@@ -780,9 +784,6 @@
         return { ...item, countTuntas, avgFormatif, timeSeconds };
       });
 
-      // LOGIKA PENGURUTAN:
-      // 1. Jumlah LKM Tuntas terbanyak
-      // 2. Jika LKM Tuntas sama, siswa yang MENGIRIM LEBIH AWAL/LEBIH CEPAT akan berada di atas
       processed.sort((a, b) => {
         if (b.countTuntas !== a.countTuntas) {
           return b.countTuntas - a.countTuntas;
@@ -1050,6 +1051,8 @@
           <td class="border border-black p-2 text-center">${s.lkm6_foto ? '✔' : '-'}</td>
           <td class="border border-black p-2 text-center">${s.lkm7_foto ? '✔' : '-'}</td>
           <td class="border border-black p-2 text-center">${s.lkm8_foto ? '✔' : '-'}</td>
+          <td class="border border-black p-2 text-center">${s.lkm9_foto ? '✔' : '-'}</td>
+          <td class="border border-black p-2 text-center">${s.lkm10_foto ? '✔' : '-'}</td>
           <td class="border border-black p-2 text-center font-bold">${countTuntas} / ${TOTAL_LKM}</td>
         `;
         tbody.appendChild(tr);
